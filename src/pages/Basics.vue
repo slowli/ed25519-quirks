@@ -1,7 +1,7 @@
 <template>
   <div>
-    <p class="lead">As with other digital signature schemes, Ed25519 consists of three protocols: key generation, signing and verification.
-      They are similar, but distinct, from the generic Schnorr scheme.</p>
+    <p class="lead">As with other digital signature schemes, Ed25519 consists of three protocols: key generation,
+      signing and verification. They are similar, but distinct, from the generic Schnorr scheme.</p>
 
     <h3 id="generation">Key Generation</h3>
     <p>Ed25519 does not match secret keys to scalars.
@@ -25,11 +25,12 @@
       The upper 32 bytes of the expanded seed are used as a <em>nonce</em> during signing.
     </data-row>
     <data-row name="Public key" :data="repr(keypair.publicKey().bytes())" wrapper='A = [a]B = Pt("$")'>
-      The public key is still (the encoding of) a point on the elliptic curve, obtained by multiplying the basepoint <code>B</code>
-        by the secret scalar.
+      The public key is still (the encoding of) a point on the elliptic curve, obtained by multiplying
+      the basepoint <code>B</code> by the secret scalar.
     </data-row>
 
-    <p>If you want to know why the secret scalar is clamped in this way, refer to <router-link :to="{ name: 'clamping' }">this explanation</router-link>.</p>
+    <p>If you want to know why the secret scalar is clamped in this way, refer to
+      <router-link :to="{ name: 'clamping' }">this explanation</router-link>.</p>
 
     <h3 id="signing">Signing</h3>
     <p>Signing in Ed25519 is deterministic: it doesn't require an RNG during signing. A faulty RNG during signing
@@ -45,8 +46,8 @@
     </form>
 
     <data-row name="“Random” scalar" :data="repr(signature.randomScalar())" wrapper='r = Sc(Hash(nonce || M)) = Sc("$")'>
-      Like in <a href="https://tools.ietf.org/html/rfc6979">RFC 6979</a>, the “random” scalar <code>r</code> is chosen based on the secret
-      key and the message <code>M</code>.
+      Like in <a href="https://tools.ietf.org/html/rfc6979">RFC 6979</a>, the “random” scalar <code>r</code> is chosen
+      based on the secret key and the message <code>M</code>.
     </data-row>
     <data-row name="Signature point" :data="repr(signature.random_point())" wrapper='R = [r]B = Pt("$")'></data-row>
     <data-row name="Hash scalar" :data="repr(signature.hashScalar())" wrapper='h = Sc(Hash(R || A || M)) = Sc("$")'>
@@ -56,7 +57,8 @@
 
     <h3 id="verification" class="mt-4">
       Verification
-      <a href="#" role="button" class="badge badge-primary" @click.prevent="copyFromSigning()" title="Copy from signing"><i class="far fa-clipboard"></i></a>
+      <a href="#" role="button" class="badge badge-primary" @click.prevent="copyFromSigning()"
+         title="Copy from signing"><i class="far fa-clipboard"></i></a>
     </h3>
 
     <p>Verification uses the equation following from Schnorr and the modified signing procedure:</p>
@@ -66,22 +68,27 @@
       <div class="form-row mb-2">
         <label for="signed-message" class="col-md-3 col-lg-2 col-form-label">Message <code>M</code></label>
         <div class="col-md-9 col-lg-10">
-          <input id="signed-message" class="form-control" autocomplete="off" placeholder="Signed message" v-model="signedMessage">
+          <input id="signed-message" class="form-control" autocomplete="off" placeholder="Signed message"
+                 v-model="signedMessage">
         </div>
       </div>
       <div class="form-row mb-2">
         <label for="signer" class="col-md-3 col-lg-2 col-form-label">Public key <code>A</code></label>
         <div class="col-md-9 col-lg-10 input-group">
-          <input id="signer" class="form-control" autocomplete="off" :class="{ 'is-invalid': verification.signerParseError || verification.decompressionError }" placeholder="Public key" v-model="signer">
+          <input id="signer" class="form-control" autocomplete="off" placeholder="Public key" v-model="signer"
+                 :class="{ 'is-invalid': verification.signerParseError || verification.decompressionError }">
           <div class="invalid-feedback" v-if="verification.signerParseError">Error parsing public key.</div>
-          <div class="invalid-feedback" v-if="verification.decompressionError">Public key does not correspond to a curve point.</div>
+          <div class="invalid-feedback" v-if="verification.decompressionError">Public key does not correspond
+            to a curve point.</div>
         </div>
       </div>
       <div class="form-row mb-3">
         <label for="signature" class="col-md-3 col-lg-2 col-form-label">Signature <code>(R, s)</code></label>
         <div class="col-md-9 col-lg-10 input-group">
-          <textarea id="signature" class="form-control" style="resize: none;" :class="{ 'is-invalid': verification.signatureParseError }" placeholder="Signature" v-model="verifySignature"></textarea>
-          <div class="invalid-feedback" v-if="verification.signatureParseError">Error parsing signature. The signature should be 64 bytes.</div>
+          <textarea id="signature" class="form-control" style="resize: none;" placeholder="Signature"
+                    :class="{ 'is-invalid': verification.signatureParseError }" v-model="verifySignature"></textarea>
+          <div class="invalid-feedback" v-if="verification.signatureParseError">Error parsing signature.
+            The signature should be 64 bytes.</div>
         </div>
       </div>
     </form>
