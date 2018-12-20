@@ -1,0 +1,32 @@
+dist: trusty
+addons:
+  firefox: latest
+  chrome: stable
+branches:
+  only:
+    - master
+    # tags
+    - /^v\d+\.\d+(\.\d+)?(-\S*)?$/
+
+cache:
+  directories:
+    - node_modules
+    - wasm/target
+    - $HOME/.cargo
+
+language: rust
+rust: nightly-2018-11-13
+
+install:
+  - rustup component add rustfmt-preview
+  - rustfmt -V
+  - rustup component add clippy-preview
+  - cargo clippy -V
+  - curl https://rustwasm.github.io/wasm-pack/installer/init.sh -sSf | sh -s -- -f
+
+script:
+  - cd $TRAVIS_BUILD_DIR/wasm && cargo fmt -- --check
+  - cd $TRAVIS_BUILD_DIR/wasm && cargo check --tests --target wasm32-unknown-unknown
+  - cd $TRAVIS_BUILD_DIR/wasm && cargo clippy --tests --target wasm32-unknown-unknown
+  - cd $TRAVIS_BUILD_DIR/wasm && wasm-pack build
+  - cd $TRAVIS_BUILD_DIR/wasm && wasm-pack test --firefox --chrome --headless
