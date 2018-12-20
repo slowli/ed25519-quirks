@@ -1,0 +1,14 @@
+# Rust
+/wasm/target
+/wasm/Cargo.lock
+/wasm/wasm-pack.log
+/wasm/pkg
+
+# JS / web targets
+/dist
+node_modules
+npm-debug.log
+wasm-pack.log
+
+# IDE
+/.idea
