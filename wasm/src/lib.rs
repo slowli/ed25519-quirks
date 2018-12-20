@@ -43,21 +43,19 @@ impl RngCore for CallbackRng {
     fn next_u32(&mut self) -> u32 {
         let mut bytes = [0_u8; 4];
         random_bytes(&mut bytes);
-        let mut result = bytes[0] as u32;
-        for i in 1..4 {
-            result += (bytes[i] as u32) << (i * 8);
-        }
-        result
+        bytes
+            .iter()
+            .enumerate()
+            .fold(0, |acc, (i, &byte)| acc + (u32::from(byte) << (i * 8)))
     }
 
     fn next_u64(&mut self) -> u64 {
         let mut bytes = [0_u8; 8];
         random_bytes(&mut bytes);
-        let mut result = bytes[0] as u64;
-        for i in 1..8 {
-            result += (bytes[i] as u64) << (i * 8);
-        }
-        result
+        bytes
+            .iter()
+            .enumerate()
+            .fold(0, |acc, (i, &byte)| acc + (u64::from(byte) << (i * 8)))
     }
 
     fn fill_bytes(&mut self, dest: &mut [u8]) {

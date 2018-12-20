@@ -1,5 +1,8 @@
 //! Tests for the Rust / WASM part of Ed25519 Quirks.
 
+// Used internally by generated test code.
+#![allow(clippy::not_unsafe_ptr_arg_deref)]
+
 extern crate ed25519_quirks;
 extern crate wasm_bindgen_test;
 
