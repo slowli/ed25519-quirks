@@ -28,7 +28,7 @@ before_install:
   - rustup target add --toolchain nightly-2018-11-13 wasm32-unknown-unknown
   - curl https://rustwasm.github.io/wasm-pack/installer/init.sh -sSf | sh -s -- -f
 install:
-  - npm install
+  - npm ci
 
 script:
   - cd $TRAVIS_BUILD_DIR/wasm && cargo fmt -- --check
@@ -37,3 +37,12 @@ script:
   - cd $TRAVIS_BUILD_DIR/wasm && wasm-pack build
   - cd $TRAVIS_BUILD_DIR/wasm && wasm-pack test --firefox --chrome --headless
   - cd $TRAVIS_BUILD_DIR && npm run build
+
+deploy:
+  provider: pages
+  skip_cleanup: true
+  # `dist` directory is built as a part of `script` tasks.
+  local_dir: dist
+  github_token: $GITHUB_TOKEN
+  on:
+    branch: master
