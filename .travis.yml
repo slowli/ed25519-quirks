@@ -17,12 +17,18 @@ cache:
 language: rust
 rust: nightly-2018-11-13
 
-install:
+before_install:
+  # Install Node
+  - nvm install --lts 10 && nvm use 10
+  # Install Rust components
   - rustup component add rustfmt-preview
   - rustfmt -V
   - rustup component add clippy-preview
   - cargo clippy -V
+  - rustup target add --toolchain nightly-2018-11-13 wasm32-unknown-unknown
   - curl https://rustwasm.github.io/wasm-pack/installer/init.sh -sSf | sh -s -- -f
+install:
+  - npm install
 
 script:
   - cd $TRAVIS_BUILD_DIR/wasm && cargo fmt -- --check
@@ -30,3 +36,4 @@ script:
   - cd $TRAVIS_BUILD_DIR/wasm && cargo clippy --tests --target wasm32-unknown-unknown
   - cd $TRAVIS_BUILD_DIR/wasm && wasm-pack build
   - cd $TRAVIS_BUILD_DIR/wasm && wasm-pack test --firefox --chrome --headless
+  - cd $TRAVIS_BUILD_DIR && npm run build
