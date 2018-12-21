@@ -3,6 +3,8 @@ name = "ed25519-quirks"
 version = "0.1.0"
 authors = ["Alex Ostrovski <ostrovski.alex@gmail.com>"]
 license = "Apache-2.0"
+description = "WASM part of the Ed25519 Quirks web app"
+repository = "https://github.com/slowli/ed25519-quirks"
 
 [lib]
 crate-type = ["cdylib", "rlib"]
