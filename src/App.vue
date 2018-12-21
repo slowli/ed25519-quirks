@@ -55,13 +55,13 @@
     <div class="container pt-4">
       <router-view :encoding="encoding"></router-view>
 
-      <div class="d-flex mt-4">
-        <div v-if="$route.meta.prev" class="mr-md-auto">
+      <div v-if="$route.meta.prev || $route.meta.next" class="row mt-4">
+        <div v-if="$route.meta.prev" class="col-md-5 mb-1 mb-md-0">
           <router-link :to="{ name: $route.meta.prev }"><span class="text-muted">←</span>
             {{ $router.resolve({ name: $route.meta.prev }).route.meta.description }}
           </router-link>
         </div>
-        <div v-if="$route.meta.next">
+        <div v-if="$route.meta.next" class="col-md-5 ml-auto text-md-right">
           <router-link :to="{ name: $route.meta.next }">
             {{ $router.resolve({ name: $route.meta.next }).route.meta.description }}
             <span class="text-muted">→</span>

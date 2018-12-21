@@ -45,12 +45,12 @@
       </div>
     </form>
 
-    <data-row name="“Random” scalar" :data="repr(signature.randomScalar())" wrapper='r = Sc(Hash(nonce || M)) = Sc("$")'>
+    <data-row name="“Random” scalar" :data="repr(signature.randomScalar())" wrapper='r = Sc(Hash(nonce ‖ M)) = Sc("$")'>
       Like in <a href="https://tools.ietf.org/html/rfc6979">RFC 6979</a>, the “random” scalar <code>r</code> is chosen
       based on the secret key and the message <code>M</code>.
     </data-row>
     <data-row name="Signature point" :data="repr(signature.random_point())" wrapper='R = [r]B = Pt("$")'></data-row>
-    <data-row name="Hash scalar" :data="repr(signature.hashScalar())" wrapper='h = Sc(Hash(R || A || M)) = Sc("$")'>
+    <data-row name="Hash scalar" :data="repr(signature.hashScalar())" wrapper='h = Sc(Hash(R ‖ A ‖ M)) = Sc("$")'>
       Unlike vanilla Schnorr, we include the public key <code>A</code> to values being hashed.
     </data-row>
     <data-row name="Signature scalar" :data="repr(signature.scalar())" wrapper='s = r + h*a = Sc("$")'></data-row>
@@ -62,7 +62,7 @@
     </h3>
 
     <p>Verification uses the equation following from Schnorr and the modified signing procedure:</p>
-    <equation>[s]B == R + [H(R || A || M)]A.</equation>
+    <equation>[s]B == R + [H(R ‖ A ‖ M)]A.</equation>
 
     <form>
       <div class="form-row mb-2">
@@ -93,7 +93,7 @@
       </div>
     </form>
     <template v-if="!verification.error">
-      <data-row name="Hash scalar" :data="repr(verification.hashScalar)" wrapper='h = Sc(Hash(R || A || M)) = Sc("$")'>
+      <data-row name="Hash scalar" :data="repr(verification.hashScalar)" wrapper='h = Sc(Hash(R ‖ A ‖ M)) = Sc("$")'>
         Hash scalar can be readily recreated from public information.
       </data-row>
       <data-row name="EC point" :data="repr(verification.computedPoint)" wrapper='R′ = [s]B - [h]A = Pt("$")'>

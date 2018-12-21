@@ -7,8 +7,8 @@
       which cannot be obtained with valid key generation. Still, it looks <em>fascinating</em>.</p>
     <p>To obtain “wildcard” signatures, let’s first take the identity point as the public key: <code>A = O</code>.
       The verification equation</p>
-    <equation>[s]B = R + [H(R || A || M)]A</equation>
-    <p>loses the second term on the right-hand side; no matter the value of the hash scalar <code>H(R || A || M)</code>,
+    <equation>[s]B = R + [H(R ‖ A ‖ M)]A</equation>
+    <p>loses the second term on the right-hand side; no matter the value of the hash scalar <code>H(R ‖ A ‖ M)</code>,
       when multiplied by the identity, it yields <code>O</code>. The equation transforms into <code>[s]B = R</code>;
       thus, signature <code>([s]B, s)</code> for any possible scalar <code>s</code> is a valid signature
       for <em>any</em> message under public key <code>O</code>.</p>
@@ -20,7 +20,7 @@
     <equation>G<sub>tors</sub> =
       { O, E<sub>1</sub>, E<sub>2</sub> ≡ [2]E<sub>1</sub>, …, E<sub>7</sub> ≡ [7]E<sub>1</sub> }.</equation>
     <p>For any public key <code>A</code> in <code>G<sub>tors</sub></code>, with probability
-      at least 1/8 over message space, the hash scalar <code>H([s]B || A || M)</code> is divisible
+      at least 1/8 over message space, the hash scalar <code>H([s]B ‖ A ‖ M)</code> is divisible
       by the point order (1, 2, 4 or 8). In this case, signature <code>([s]B, s)</code> will still be valid.</p>
 
     <form>

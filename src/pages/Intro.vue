@@ -60,7 +60,7 @@
       <a href="https://link.springer.com/chapter/10.1007%2F3-540-47721-7_12">the Fiat – Shamir heuristic</a>:
       the verifier is replaced with a cryptographic hash function <code>Hash</code>, which, when the verifier’s output
       is requested, hashes all data sent so far by the prover together with the message <code>M</code> being signed.
-      In other words, <code>h := Hash(R || M)</code>, where <code>||</code> denotes concatenation of bytes.
+      In other words, <code>h := Hash(R ‖ M)</code>, where <code>‖</code> denotes concatenation of bytes.
       If the cryptographic hash function models a <a href="https://en.wikipedia.org/wiki/Random_oracle">random oracle</a>,
       the resulting scheme (known as <a href="https://patents.google.com/patent/US4995082">Schnorr signature scheme</a>)
       is secure.</p>
@@ -72,9 +72,9 @@
       <li><strong>Key generation:</strong> Select random scalar <code>a</code> as the secret (aka signing) key.
         Use <code>A = [a]B</code> as the public (verifying) key.</li>
       <li><strong>Signing:</strong> Select random scalar <code>r</code>. Compute <code>R := [r]B</code>,
-        <code>h := Hash(R || M)</code>, and finally <code>s := r + h*a</code>. Output <code>(R, s)</code>.</li>
+        <code>h := Hash(R ‖ M)</code>, and finally <code>s := r + h*a</code>. Output <code>(R, s)</code>.</li>
       <li><strong>Verification:</strong> Given the public key <code>A</code> and signature <code>(R, s)</code>,
-        verify <code>[s]B == R + [Hash(R || M)]A</code>.</li>
+        verify <code>[s]B == R + [Hash(R ‖ M)]A</code>.</li>
     </ul>
   </div>
 </template>
