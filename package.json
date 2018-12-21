@@ -1,5 +1,6 @@
 {
   "name": "ed25519-quirks",
+  "description": "Web part of the Ed25519 Quirks app",
   "version": "0.1.0",
   "main": "src/index.js",
   "private": true,

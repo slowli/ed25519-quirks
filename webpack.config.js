@@ -31,6 +31,9 @@ module.exports = {
   plugins: [
     new CopyWebpackPlugin(['index.html']),
     new VueLoaderPlugin(),
+
+    // This hard-codes the relative path to the `encoding` module from the `wasm/pkg` directory,
+    // which is the only place using `TextEncoder` / `TextDecoder` globals.
     new webpack.ProvidePlugin({
       TextEncoder: ['../../src/encoding', 'TextEncoder'],
       TextDecoder: ['../../src/encoding', 'TextDecoder']

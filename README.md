@@ -1,8 +1,37 @@
 # Ed25519 Quirks
 
-Single-page web app, demonstrating some of Ed25519 peculiarities. Built with the Rust/WASM toolchain
+Single-page web app demonstrating some of Ed25519 peculiarities. Built with the Rust/WASM toolchain
 and Vue.
+
+## Running locally
+
+You will need to install a Node / npm toolchain (preferably via a manager like [`nvm`])
+and a Rust toolchain (preferably via [`rustup`]). Both toolchains should be recent; e.g., Node 10-LTS (aka Dubnium)
+and nightly Rust >= 1.32 (so far, the WASM tools support nightly Rust only).
+You should also install [`wasm-pack`]. If you have multiple Rust toolchains installed locally,
+you should set the override for the project directory via `rustup override`, so that all Rust-related commands
+are executed on the nightly toolchain.
+
+To (re)build the WASM file and its JS bindings, execute
+
+```shell
+npm run build-wasm
+```
+
+To serve the app locally with the Webpack dev server, run
+
+```shell
+npm start
+```
+
+## Testing
+
+Consult [`package.json`](package.json) for the full list of linting and testing commands.
 
 ## License
 
 Licensed under [Apache-2.0 license](LICENSE).
+
+[`nvm`]: https://github.com/creationix/nvm
+[`rustup`]: https://rustup.rs/
+[`wasm-pack`]: https://rustwasm.github.io/wasm-pack/installer/
