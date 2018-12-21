@@ -1,7 +1,6 @@
 # Rust
 /wasm/target
 /wasm/Cargo.lock
-/wasm/wasm-pack.log
 /wasm/pkg
 
 # JS / web targets
