@@ -99,6 +99,7 @@ pub struct PublicKeyIterator {
     inner: Box<dyn Iterator<Item = PublicKey>>,
 }
 
+#[allow(clippy::should_implement_trait)]
 #[wasm_bindgen]
 impl PublicKeyIterator {
     /// Advances the iterator.
@@ -222,6 +223,12 @@ impl Verification {
 /// Ed25519 keypair.
 #[wasm_bindgen]
 pub struct Keypair(ed25519::Keypair);
+
+impl Default for Keypair {
+    fn default() -> Self {
+        Keypair::new()
+    }
+}
 
 #[wasm_bindgen]
 impl Keypair {
@@ -481,6 +488,12 @@ impl Signature {
 /// Scalar value used in Ed25519.
 #[wasm_bindgen]
 pub struct RandomScalar(Scalar);
+
+impl Default for RandomScalar {
+    fn default() -> Self {
+        RandomScalar::new()
+    }
+}
 
 #[wasm_bindgen]
 impl RandomScalar {
