@@ -29,7 +29,7 @@
     props: {
       name: { type: String, required: true },
       wrapper: { type: String, default: '"$"' },
-      data: { type: String }
+      data: { type: String, default: '' }
     }
   }
 </script>

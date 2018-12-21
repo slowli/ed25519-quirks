@@ -27,7 +27,7 @@
       <div class="form-group form-row">
         <label class="col-md-3 col-lg-2 col-form-label pt-0">Torsion point</label>
         <div class="col-md-9 col-lg-10">
-          <div v-for="i in [0, 1, 2, 3, 4, 5, 6, 7]" class="custom-control custom-radio custom-control-inline">
+          <div v-for="i in [0, 1, 2, 3, 4, 5, 6, 7]" :key="i" class="custom-control custom-radio custom-control-inline">
             <input type="radio" :id="'torsion-index-' + i" name="torsion-index" class="custom-control-input"
                    :value="i" v-model="torsionIndex">
             <label class="custom-control-label" :for="'torsion-index-' + i">
@@ -52,8 +52,8 @@
       <a slot="key" href="#" role="button" title="Generate a new signature"
          @click.prevent="updateSignature()"><i class="fas fa-dice"></i></a>
     </data-row>
-    <data-row v-for="(message, index) in messages" :key="message" :name="messageName(index)"
-              :data="message" wrapper="$"></data-row>
+    <data-row v-for="(sampleMessage, index) in messages" :key="sampleMessage" :name="messageName(index)"
+              :data="sampleMessage" wrapper="$"></data-row>
     <div class="row my-2 justify-content-center">
       <button type="button" class="btn btn-primary btn-sm" @click="moreMessages()">Some more messages</button>
     </div>
@@ -97,6 +97,7 @@
           case 2:
           case 6: return '1/4';
           case 4: return '1/2';
+          default: return ''; // unreachable
         }
       }
     },
