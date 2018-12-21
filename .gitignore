@@ -1,4 +1,5 @@
 # Rust
+/wasm/bin
 /wasm/target
 /wasm/Cargo.lock
 /wasm/pkg
