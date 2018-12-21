@@ -1,10 +1,17 @@
 {
   "name": "ed25519-quirks",
   "version": "0.1.0",
-  "main": "index.js",
+  "main": "src/index.js",
   "private": true,
   "scripts": {
-    "build": "webpack --config webpack.config.js --mode=production",
+    "lint-wasm:fmt": "cd wasm && cargo fmt -- --check",
+    "lint-wasm:check": "cargo check --manifest-path wasm/Cargo.toml --all --tests",
+    "lint-wasm:clippy": "cargo clippy --manifest-path wasm/Cargo.toml --all --tests -- -D warnings",
+    "lint-wasm": "npm run lint-wasm:fmt && npm run lint-wasm:check && npm run lint-wasm:clippy",
+    "build-wasm": "wasm-pack build wasm",
+    "test-wasm": "wasm-pack test wasm --headless",
+    "build-web": "webpack --config webpack.config.js --mode=production",
+    "build": "npm run build-wasm && npm run build-web",
     "start": "webpack-dev-server -d"
   },
   "author": "Alex Ostrovski <ostrovski.alex@gmail.com>",
