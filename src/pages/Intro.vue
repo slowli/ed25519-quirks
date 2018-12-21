@@ -1,50 +1,67 @@
 <template>
   <div>
-    <p class="lead"><a href="https://ed25519.cr.yp.to/ed25519-20110926.pdf">Ed25519</a> is a public-key digital
+    <p class="lead">
+      <a href="https://ed25519.cr.yp.to/ed25519-20110926.pdf">Ed25519</a> is a public-key digital
       signature cryptosystem proposed in 2011 by the team lead by Daniel J. Bernstein.
       It is a particular variant of EdDSA (<strong>D</strong>igital <strong>S</strong>ignature
-      <strong>A</strong>lgorithm on twisted <strong>Ed</strong>wards curves).</p>
-    <p>Ed25519 is quite fast due to a particular choice of the curve and avoids common pitfalls of previous
-      elliptic curve-based cryptosystems (<em>cough</em>
-      <a href="https://en.wikipedia.org/wiki/Elliptic_Curve_Digital_Signature_Algorithm#Security">ECDSA</a>
-      <em>cough</em>), in particular boosting resistance to side-channel attacks. However, due to some peculiarities
+      <strong>A</strong>lgorithm on twisted <strong>Ed</strong>wards curves).
+    </p>
+    <p>
+      Ed25519 is quite fast due to a particular choice of the curve and avoids common pitfalls of previous
+      elliptic curve-based cryptosystems, such as
+      <a href="https://en.wikipedia.org/wiki/Elliptic_Curve_Digital_Signature_Algorithm#Security">ECDSA</a>,
+      in particular boosting resistance to side-channel attacks. However, due to some peculiarities
       in Ed25519 construction, it’s not always easy to use it correctly for applications besides digital signatures,
       which are becoming increasingly popular with the advent of cryptocurrencies and popularization of
-      applied cryptography in general.</p>
+      applied cryptography in general.
+    </p>
 
     <h3>Basic Definitions</h3>
-    <p>Ed25519 uses an eponymous elliptic curve. For the sake of this discussion, it’s not necessary to have
+
+    <p>
+      Ed25519 uses an eponymous elliptic curve. For the sake of this discussion, it’s not necessary to have
       a deep understanding how elliptic curves are organized.
-      It suffices to say that the curve consists of <em>points</em>, which form a
-      <a href="https://en.wikipedia.org/wiki/Abelian_group#Finite_abelian_groups">finite Abelian (commutative) group</a>.
+      It suffices to say that the curve consists of <em>points</em>, which form
+      a <a href="https://en.wikipedia.org/wiki/Abelian_group#Finite_abelian_groups">finite Abelian group</a>.
       As per group definition, it is possible to operate on two group points resulting in a group point,
       and to multiply group by <em>scalars</em> (integers modulo a certain number),
-      again resulting in a point.</p>
+      again resulting in a point.
+    </p>
 
     <ul>
       <li>We will refer the group operation as addition and denote it as such: <code>A + B</code>.</li>
-      <li>Multiplication of a point <code>A</code> by the scalar <code>x</code> will be denoted as
-        <code>[x]A</code>.</li>
+      <li>
+        Multiplication of a point <code>A</code> by the scalar <code>x</code> will be denoted as
+        <code>[x]A</code>.
+      </li>
     </ul>
 
-    <p>The group has a distinguished <em>identity point</em> <code>O</code>, which plays a similar role
-      to zero in integer modulo groups: adding <code>O</code> to any point <code>A</code> results in <code>A</code>.</p>
+    <p>
+      The group has a distinguished <em>identity point</em> <code>O</code>, which plays a similar role
+      to zero in integer modulo groups: adding <code>O</code> to any point <code>A</code> results in <code>A</code>.
+    </p>
     <p>The Ed25519 group has <code>8ℓ</code> points, where the prime</p>
-    <equation class="wrapped">ℓ = 2<sup>252</sup> + 27742317777372353535851937790883648493</equation>
-    <p>So, unlike some other elliptic curves (say, secp256k1 used in Bitcoin and Ethereum cryptocurrencies),
+    <Equation class="wrapped">ℓ = 2<sup>252</sup> + 27742317777372353535851937790883648493</Equation>
+    <p>
+      So, unlike some other elliptic curves (say, secp256k1 used in Bitcoin and Ethereum cryptocurrencies),
       the group is not prime-order itself. For a signature scheme, we still need a prime-order subgroup; it is created
       by selecting a <em>basepoint</em> <code>B</code> with order <code>ℓ</code> and using it
-      as the group generator:</p>
-    <equation>G = { O, B, [2]B, [3]B, … [ℓ - 1]B };</equation>
-    <p>(<code>[ℓ]B = O</code> by definition). For this reason, we will assume in further discussion that scalars
-      are integers modulo <code>ℓ</code>, rather than <code>8ℓ</code>.</p>
+      as the group generator:
+    </p>
+    <Equation>G = { O, B, [2]B, [3]B, … [ℓ - 1]B };</Equation>
+    <p>
+      (<code>[ℓ]B = O</code> by definition). For this reason, we will assume in further discussion that scalars
+      are integers modulo <code>ℓ</code>, rather than <code>8ℓ</code>.
+    </p>
 
     <h3>Schnorr Signature Scheme</h3>
-    <p>As some other signature schemes based on elliptic curves, Ed25519 is essentially the non-interactive version
+    <p>
+      As some other signature schemes based on elliptic curves, Ed25519 is essentially the non-interactive version
       of a proof of knowledge of a <a href="https://en.wikipedia.org/wiki/Discrete_logarithm">discrete logarithm</a>.
       In the original interactive form of the proof-of-knowledge protocol, one proves that he knows
       a scalar <code>a</code> corresponding to a certain point <code>A = [a]B</code> without revealing any information
-      about <code>a</code>. The protocol goes as follows:</p>
+      about <code>a</code>. The protocol goes as follows:
+    </p>
     <ol>
       <li><strong>Prover:</strong> Choose a random scalar <code>r</code>.</li>
       <li><strong>Prover → Verifier:</strong> Send <code>R := [r]B</code>.</li>
@@ -52,29 +69,41 @@
       <li><strong>Prover → Verifier:</strong> Compute and send <code>s := r + h*a</code>.</li>
       <li><strong>Verifier:</strong> Verify that <code>[s]B == R + [h]A</code>.</li>
     </ol>
-    <p>Turns out that this protocol is complete (if the prover knows <code>a</code>, the verifier will be convinced
+    <p>
+      Turns out that this protocol is complete (if the prover knows <code>a</code>, the verifier will be convinced
       by the proof), sound (the prover cannot produce the necessary output if he doesn’t know <code>a</code>)
       and zero-knowledge (the verifier doesn’t learn anything about <code>a</code> he didn’t know before the protocol
-      was initiated).</p>
-    <p>To convert this protocol into a digital signature scheme, we apply
+      was initiated).
+    </p>
+    <p>
+      To convert this protocol into a digital signature scheme, we apply
       <a href="https://link.springer.com/chapter/10.1007%2F3-540-47721-7_12">the Fiat – Shamir heuristic</a>:
       the verifier is replaced with a cryptographic hash function <code>Hash</code>, which, when the verifier’s output
       is requested, hashes all data sent so far by the prover together with the message <code>M</code> being signed.
       In other words, <code>h := Hash(R ‖ M)</code>, where <code>‖</code> denotes concatenation of bytes.
       If the cryptographic hash function models a <a href="https://en.wikipedia.org/wiki/Random_oracle">random oracle</a>,
       the resulting scheme (known as <a href="https://patents.google.com/patent/US4995082">Schnorr signature scheme</a>)
-      is secure.</p>
+      is secure.
+    </p>
     <p>The Schnorr scheme for elliptic curves looks as follows:</p>
     <ul>
-      <li><strong>Public parameters:</strong> A prime-order elliptic curve group with the basepoint <code>B</code>,
+      <li>
+        <strong>Public parameters:</strong> A prime-order elliptic curve group with the basepoint <code>B</code>,
         in which the discrete logarithm problem (finding scalar <code>a</code> given point <code>[a]B</code>)
-        is believed to be hard.</li>
-      <li><strong>Key generation:</strong> Select random scalar <code>a</code> as the secret (aka signing) key.
-        Use <code>A = [a]B</code> as the public (verifying) key.</li>
-      <li><strong>Signing:</strong> Select random scalar <code>r</code>. Compute <code>R := [r]B</code>,
-        <code>h := Hash(R ‖ M)</code>, and finally <code>s := r + h*a</code>. Output <code>(R, s)</code>.</li>
-      <li><strong>Verification:</strong> Given the public key <code>A</code> and signature <code>(R, s)</code>,
-        verify <code>[s]B == R + [Hash(R ‖ M)]A</code>.</li>
+        is believed to be hard.
+      </li>
+      <li>
+        <strong>Key generation:</strong> Select random scalar <code>a</code> as the secret (aka signing) key.
+        Use <code>A = [a]B</code> as the public (verifying) key.
+      </li>
+      <li>
+        <strong>Signing:</strong> Select random scalar <code>r</code>. Compute <code>R := [r]B</code>,
+        <code>h := Hash(R ‖ M)</code>, and finally <code>s := r + h*a</code>. Output <code>(R, s)</code>.
+      </li>
+      <li>
+        <strong>Verification:</strong> Given the public key <code>A</code> and signature <code>(R, s)</code>,
+        verify <code>[s]B == R + [Hash(R ‖ M)]A</code>.
+      </li>
     </ul>
   </div>
 </template>

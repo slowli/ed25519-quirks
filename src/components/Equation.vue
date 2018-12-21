@@ -1,5 +1,7 @@
 <template>
-  <p class="px-2 py-1 bg-light equation text-monospace"><slot/></p>
+  <p class="px-2 py-1 bg-light equation text-monospace">
+    <slot></slot>
+  </p>
 </template>
 <script>
   export default {

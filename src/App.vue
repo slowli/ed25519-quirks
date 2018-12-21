@@ -3,44 +3,73 @@
     <header class="body-header">
       <div class="container">
         <h1 class="display-3">
-          <router-link class="d-block" :to="{ name: 'intro' }">Ed25519 Quirks</router-link>
+          <RouterLink class="d-block" :to="{ name: 'intro' }">Ed25519 Quirks</RouterLink>
         </h1>
         <nav class="navbar navbar-expand-lg navbar-light px-0 pb-0">
-          <button class="navbar-toggler mb-1" type="button" data-toggle="collapse" data-target="#main-nav-content"
-                  aria-controls="main-nav-content" aria-expanded="false" aria-label="Toggle navigation">
+          <button
+            class="navbar-toggler mb-1"
+            type="button"
+            data-toggle="collapse"
+            data-target="#main-nav-content"
+            aria-controls="main-nav-content"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
+          >
             <span class="navbar-toggler-icon"></span>
           </button>
 
-          <div class="collapse navbar-collapse" id="main-nav-content">
+          <div id="main-nav-content" class="collapse navbar-collapse">
             <ul class="navbar-nav mr-auto">
               <li class="nav-item" :class="{ active: $route.name === 'basics' }">
-                <router-link class="nav-link" :to="{ name: 'basics' }">Basics</router-link>
+                <RouterLink class="nav-link" :to="{ name: 'basics' }">Basics</RouterLink>
               </li>
               <li class="nav-item" :class="{ active: $route.name === 'malleability' }">
-                <router-link class="nav-link" :to="{ name: 'malleability' }">Malleability</router-link>
+                <RouterLink class="nav-link" :to="{ name: 'malleability' }">Malleability</RouterLink>
               </li>
               <li class="nav-item" :class="{ active: $route.name === 'wildcards' }">
-                <router-link class="nav-link" :to="{ name: 'wildcards' }">Wildcards</router-link>
+                <RouterLink class="nav-link" :to="{ name: 'wildcards' }">Wildcards</RouterLink>
               </li>
             </ul>
 
             <ul class="navbar-nav">
               <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true"
-                   aria-expanded="false">
+                <a
+                  class="nav-link dropdown-toggle"
+                  href="#"
+                  role="button"
+                  data-toggle="dropdown"
+                  aria-haspopup="true"
+                  aria-expanded="false"
+                >
                   Settings
                 </a>
                 <div class="dropdown-menu dropdown-menu-right">
-                  <h6 class="dropdown-header">Encoding</h6>
+                  <h6 class="dropdown-header">
+                    Encoding
+                  </h6>
                   <form class="mx-3 my-1">
                     <div class="custom-control custom-radio custom-control-inline">
-                      <input type="radio" id="encoding-hex" name="encoding" value="hex" class="custom-control-input"
-                             v-model="encoding" @change="updateEncoding('hex')">
+                      <input
+                        id="encoding-hex"
+                        v-model="encoding"
+                        type="radio"
+                        name="encoding"
+                        value="hex"
+                        class="custom-control-input"
+                        @change="updateEncoding('hex')"
+                      >
                       <label class="custom-control-label" for="encoding-hex">Hex</label>
                     </div>
                     <div class="custom-control custom-radio custom-control-inline">
-                      <input type="radio" id="encoding-base64" name="encoding" value="base64"
-                             class="custom-control-input" v-model="encoding" @change="updateEncoding('base64')">
+                      <input
+                        id="encoding-base64"
+                        v-model="encoding"
+                        type="radio"
+                        name="encoding"
+                        value="base64"
+                        class="custom-control-input"
+                        @change="updateEncoding('base64')"
+                      >
                       <label class="custom-control-label" for="encoding-base64">Base64</label>
                     </div>
                   </form>
@@ -53,26 +82,29 @@
     </header>
 
     <div class="container pt-4">
-      <router-view :encoding="encoding"></router-view>
+      <RouterView :encoding="encoding" />
 
       <div v-if="$route.meta.prev || $route.meta.next" class="row mt-4">
         <div v-if="$route.meta.prev" class="col-md-5 mb-1 mb-md-0">
-          <router-link :to="{ name: $route.meta.prev }"><span class="text-muted">←</span>
+          <RouterLink :to="{ name: $route.meta.prev }">
+            <span class="text-muted">←</span>
             {{ $router.resolve({ name: $route.meta.prev }).route.meta.description }}
-          </router-link>
+          </RouterLink>
         </div>
         <div v-if="$route.meta.next" class="col-md-5 ml-auto text-md-right">
-          <router-link :to="{ name: $route.meta.next }">
+          <RouterLink :to="{ name: $route.meta.next }">
             {{ $router.resolve({ name: $route.meta.next }).route.meta.description }}
             <span class="text-muted">→</span>
-          </router-link>
+          </RouterLink>
         </div>
       </div>
 
       <footer class="page-footer small text-muted">
-        <span class="copyright">© 2018 Alex Ostrovski</span>
+        <span class="copyright">
+          © 2018 Alex Ostrovski
+        </span>
         <div class="float-none float-sm-right">
-          <router-link :to="{ name: 'about' }">About</router-link>&nbsp;•
+          <RouterLink :to="{ name: 'about' }">About</RouterLink>&nbsp;•
           <a href="https://github.com/slowli/ed25519-quirks">GitHub</a>
         </div>
       </footer>

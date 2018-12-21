@@ -1,17 +1,27 @@
 <template>
   <div class="form-row mb-2">
-    <label for="seed" class="col-md-3 col-lg-2 col-form-label">Seed
-      <a href="#" role="button" title="Generate a new random seed"
-         @click.prevent="generateKeypair()"><i class="fas fa-dice"></i></a></label>
+    <div class="col-md-3 col-lg-2 col-form-label">
+      <label for="seed">Seed</label>
+      <a
+        href="#"
+        role="button"
+        title="Generate a new random seed"
+        @click.prevent="generateKeypair()"
+      ><i class="fas fa-dice"></i></a>
+    </div>
+
     <div class="col-md-9 col-lg-10 input-group">
       <input
-          type="text"
-          id="seed"
-          class="form-control"
-          :class="{ 'is-invalid': seedError }"
-          :value="seed"
-          @input="updateSeed($event.target.value)"/>
-      <div class="invalid-feedback" v-if="seedError">Invalid seed format.</div>
+        id="seed"
+        type="text"
+        class="form-control"
+        :class="{ 'is-invalid': seedError }"
+        :value="seed"
+        @input="updateSeed($event.target.value)"
+      >
+      <div v-if="seedError" class="invalid-feedback">
+        Invalid seed format.
+      </div>
     </div>
   </div>
 </template>

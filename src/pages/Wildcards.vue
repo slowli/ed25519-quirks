@@ -1,35 +1,60 @@
 <template>
   <div>
-    <p class="lead">One of the counter-intuitive feats of Ed25519 is that there are signatures matching any
-      given message (or at least, a non-trivial fraction of messages, say, 1/8).</p>
+    <p class="lead">
+      One of the counter-intuitive feats of Ed25519 is that there are signatures matching any
+      given message (or at least, a non-trivial fraction of messages, say, 1/8).
+    </p>
 
-    <p>This result doesn’t break Ed25519: the signatures are valid under a specifically generated public key,
-      which cannot be obtained with valid key generation. Still, it looks <em>fascinating</em>.</p>
-    <p>To obtain “wildcard” signatures, let’s first take the identity point as the public key: <code>A = O</code>.
-      The verification equation</p>
-    <equation>[s]B = R + [H(R ‖ A ‖ M)]A</equation>
-    <p>loses the second term on the right-hand side; no matter the value of the hash scalar <code>H(R ‖ A ‖ M)</code>,
+    <p>
+      This result doesn’t break Ed25519: the signatures are valid under a specifically generated public key,
+      which cannot be obtained with valid key generation. Still, it looks <em>fascinating</em>.
+    </p>
+    <p>
+      To obtain “wildcard” signatures, let’s first take the identity point as the public key: <code>A = O</code>.
+      The verification equation
+    </p>
+    <Equation>[s]B = R + [H(R ‖ A ‖ M)]A</Equation>
+    <p>
+      loses the second term on the right-hand side; no matter the value of the hash scalar <code>H(R ‖ A ‖ M)</code>,
       when multiplied by the identity, it yields <code>O</code>. The equation transforms into <code>[s]B = R</code>;
       thus, signature <code>([s]B, s)</code> for any possible scalar <code>s</code> is a valid signature
-      for <em>any</em> message under public key <code>O</code>.</p>
-    <p>The identity point has conspicuous serialization <code>0x0100…00</code>. Not to fear; there are other public keys
+      for <em>any</em> message under public key <code>O</code>.
+    </p>
+    <p>
+      The identity point has conspicuous serialization <code>0x0100…00</code>. Not to fear; there are other public keys
       that lead to almost the same result. These 8 points form the <em>torsion subgroup</em>
-      <code>G<sub>tors</sub></code> on the Ed25519 elliptic curve;
+      on the Ed25519 elliptic curve <code>G<sub>tors</sub></code>;
       for any such point <code>E</code>, <code>[8]E = O</code>. The torsion group is isomorphic to integers modulo 8,
-      i.e., we can select a group generator <code>E<sub>1</sub></code>, such that the group is</p>
-    <equation>G<sub>tors</sub> =
-      { O, E<sub>1</sub>, E<sub>2</sub> ≡ [2]E<sub>1</sub>, …, E<sub>7</sub> ≡ [7]E<sub>1</sub> }.</equation>
-    <p>For any public key <code>A</code> in <code>G<sub>tors</sub></code>, with probability
+      i.e., we can select a group generator <code>E<sub>1</sub></code>, such that the group is
+    </p>
+
+    <Equation>G<sub>tors</sub> = {
+    O, E<sub>1</sub>, E<sub>2</sub> ≡ [2]E<sub>1</sub>, …, E<sub>7</sub> ≡ [7]E<sub>1</sub>
+    }.</Equation>
+
+    <p>
+      For any public key <code>A</code> in <code>G<sub>tors</sub></code>, with probability
       at least 1/8 over message space, the hash scalar <code>H([s]B ‖ A ‖ M)</code> is divisible
-      by the point order (1, 2, 4 or 8). In this case, signature <code>([s]B, s)</code> will still be valid.</p>
+      by the point order (1, 2, 4 or 8). In this case, signature <code>([s]B, s)</code> will still be valid.
+    </p>
 
     <form>
       <div class="form-group form-row">
         <label class="col-md-3 col-lg-2 col-form-label pt-0">Torsion point</label>
         <div class="col-md-9 col-lg-10">
-          <div v-for="i in [0, 1, 2, 3, 4, 5, 6, 7]" :key="i" class="custom-control custom-radio custom-control-inline">
-            <input type="radio" :id="'torsion-index-' + i" name="torsion-index" class="custom-control-input"
-                   :value="i" v-model="torsionIndex">
+          <div
+            v-for="i in [0, 1, 2, 3, 4, 5, 6, 7]"
+            :key="i"
+            class="custom-control custom-radio custom-control-inline"
+          >
+            <input
+              :id="'torsion-index-' + i"
+              v-model="torsionIndex"
+              type="radio"
+              name="torsion-index"
+              class="custom-control-input"
+              :value="i"
+            >
             <label class="custom-control-label" :for="'torsion-index-' + i">
               <code v-if="i === 0">O</code><code v-else>E<sub>{{ i }}</sub></code>
             </label>
@@ -37,25 +62,50 @@
         </div>
         <label class="col-md-3 col-lg-2 col-form-label" for="user-message">
           Feeling lucky?
-          <status :status="publicKey.verify($Buffer.from(message, 'utf8'), signature.bytes()) ? 'ok' : 'fail'" />
+          <Status :status="publicKey.verify($Buffer.from(message, 'utf8'), signature.bytes()) ? 'ok' : 'fail'" />
         </label>
         <div class="col-md-9 col-lg-10">
-          <input id="user-message" type="text" class="form-control" v-model="message" />
-          <small class="form-text text-muted">A message you enter will be correctly signed with the signature below
-            with probability {{ probability }}.</small>
+          <input
+            id="user-message"
+            v-model="message"
+            type="text"
+            class="form-control"
+          >
+          <small class="form-text text-muted">
+            A message you enter will be correctly signed with the signature below
+            with probability {{ probability }}.
+          </small>
         </div>
       </div>
     </form>
 
-    <data-row name="Public key" :data="repr(publicKey.bytes())" wrapper='A = Pt("$")'></data-row>
-    <data-row name="Signature" :data="repr(signature.bytes())">
-      <a slot="key" href="#" role="button" title="Generate a new signature"
-         @click.prevent="updateSignature()"><i class="fas fa-dice"></i></a>
-    </data-row>
-    <data-row v-for="(sampleMessage, index) in messages" :key="sampleMessage" :name="messageName(index)"
-              :data="sampleMessage" wrapper="$"></data-row>
+    <DataRow
+      name="Public key"
+      :data="repr(publicKey.bytes())"
+      wrapper="A = Pt(&quot;$&quot;)"
+    />
+    <DataRow name="Signature" :data="repr(signature.bytes())">
+      <a
+        slot="key"
+        href="#"
+        role="button"
+        title="Generate a new signature"
+        @click.prevent="updateSignature()"
+      ><i class="fas fa-dice"></i></a>
+    </DataRow>
+    <DataRow
+      v-for="(sampleMessage, index) in messages"
+      :key="sampleMessage"
+      :name="messageName(index)"
+      :data="sampleMessage"
+      wrapper="$"
+    />
     <div class="row my-2 justify-content-center">
-      <button type="button" class="btn btn-primary btn-sm" @click="moreMessages()">Some more messages</button>
+      <button
+        type="button"
+        class="btn btn-primary btn-sm"
+        @click="moreMessages()"
+      >Some more messages</button>
     </div>
   </div>
 </template>
