@@ -47,6 +47,14 @@ export default {
     },
   },
 
+  watch: {
+    encoding() {
+      if (!this.seedError) {
+        this.seed = this.$Buffer.from(this.value.seed()).toString(this.encoding);
+      }
+    },
+  },
+
   methods: {
     generateKeypair() {
       this.value = new this.$crypto.Keypair();
