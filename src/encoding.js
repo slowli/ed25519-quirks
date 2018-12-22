@@ -1,6 +1,7 @@
 /*
- * Extra-cheap polyfill for `TextEncoder` / `TextDecoder` used in `wasm-bindgen`-generated code and absent in Edge.
- * Using a `text-encoding` package for this purpose bloats the app a couple of times, hence this hacky solution.
+ * Extra-cheap polyfill for `TextEncoder` / `TextDecoder` used in `wasm-bindgen`-generated code
+ * and absent in Edge. Using a `text-encoding` package for this purpose bloats the app a couple
+ * of times, hence this hacky solution.
  */
 
 import { Buffer } from 'buffer';
