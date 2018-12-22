@@ -15,10 +15,10 @@
   </span>
 </template>
 <script>
-  export default {
-    name: "Status",
-    props: {
-      status: { type: String, default: 'ok' }
-    }
-  }
+export default {
+  name: 'Status',
+  props: {
+    status: { type: String, default: 'ok' },
+  },
+};
 </script>

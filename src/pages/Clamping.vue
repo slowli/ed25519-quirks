@@ -35,11 +35,14 @@
       a fitting <a href="http://www.isg.rhul.ac.uk/~sdg/igor-slides.pdf">hidden number problem</a>
       (which were shown to be an effective attack vector for other cryptosystems, e.g., ECDSA).
     </p>
+
+    <!-- eslint-disable max-len -->
     <p class="small">
       Alternatively, setting lower bits is supposed to protect against
       <a href="https://crypto.stackexchange.com/questions/55632/libsodium-x25519-and-ed25519-small-order-check/55643#55643">small-subgroup
       attacks</a>, but how these attacks are relevant to signing is a good question (as opposed to key exchange,
       where small-subgroup attacks make complete sense).
     </p>
+    <!-- eslint-enable max-len -->
   </div>
 </template>

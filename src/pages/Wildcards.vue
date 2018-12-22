@@ -110,80 +110,78 @@
   </div>
 </template>
 <script>
-  import DataRow from '../components/DataRow.vue';
-  import Equation from '../components/Equation.vue';
-  import Status from '../components/Status.vue';
-  import withEncoding from '../mixins/withEncoding';
+import DataRow from '../components/DataRow.vue';
+import Equation from '../components/Equation.vue';
+import Status from '../components/Status.vue';
+import withEncoding from '../mixins/withEncoding';
 
-  export default {
-    components: { DataRow, Equation, Status },
-    mixins: [ withEncoding ],
+export default {
+  components: { DataRow, Equation, Status },
+  mixins: [withEncoding],
 
-    data() {
-      const torsionIndex = 1;
-      const signature = this.$crypto.Signature.fromRandomScalar();
-      const publicKey = this.$crypto.SMALL_SUBGROUP[torsionIndex];
+  data() {
+    const torsionIndex = 1;
+    const signature = this.$crypto.Signature.fromRandomScalar();
+    const publicKey = this.$crypto.SMALL_SUBGROUP[torsionIndex];
 
-      return {
-        torsionIndex,
-        signature,
-        message: 'Hello, world!',
-        messages: signature.generateValidMessages(publicKey, 3)
+    return {
+      torsionIndex,
+      signature,
+      message: 'Hello, world!',
+      messages: signature.generateValidMessages(publicKey, 3),
+    };
+  },
+
+  computed: {
+    publicKey() {
+      return this.$crypto.SMALL_SUBGROUP[this.torsionIndex];
+    },
+
+    probability() {
+      switch (this.torsionIndex) {
+        case 0: return '1';
+        case 1:
+        case 3:
+        case 5:
+        case 7: return '1/8';
+        case 2:
+        case 6: return '1/4';
+        case 4: return '1/2';
+        default: return ''; // unreachable
+      }
+    },
+  },
+
+  watch: {
+    torsionIndex() {
+      this.messages = this.signature.generateValidMessages(this.publicKey, 3);
+    },
+  },
+
+  methods: {
+    messageName(index) {
+      switch (index) {
+        case 0: return 'Signed message';
+        case 1: return '…Or this one?';
+        case 2: return '…Or maybe this?';
+        case 3: return '…Or this?';
+        case 4: return 'Another message';
+        case 5: return 'One more';
+        case 42: return 'Meaning of life';
+        case 666: return 'Message approved by Mr. Satan';
+        default: return `Message #${index}`;
       }
     },
 
-    computed: {
-      publicKey() {
-        return this.$crypto.SMALL_SUBGROUP[this.torsionIndex];
-      },
-
-      probability() {
-        switch (this.torsionIndex) {
-          case 0: return '1';
-          case 1:
-          case 3:
-          case 5:
-          case 7: return '1/8';
-          case 2:
-          case 6: return '1/4';
-          case 4: return '1/2';
-          default: return ''; // unreachable
-        }
-      }
+    updateSignature() {
+      this.signature = this.$crypto.Signature.fromRandomScalar();
+      this.messages = this.signature.generateValidMessages(this.publicKey, 3);
     },
 
-    watch: {
-      torsionIndex() {
-        this.messages = this.signature.generateValidMessages(this.publicKey, 3);
-      }
+    moreMessages() {
+      const messages = this.signature.generateValidMessages(this.publicKey, 3);
+      messages.forEach(message => this.messages.push(message));
     },
-
-    methods: {
-      messageName(index) {
-        switch (index) {
-          case 0: return 'Signed message';
-          case 1: return '…Or this one?';
-          case 2: return '…Or maybe this?';
-          case 3: return '…Or this?';
-          case 4: return 'Another message';
-          case 5: return 'One more';
-          case 42: return 'Meaning of life';
-          case 666: return 'Message approved by Mr. Satan';
-          default: return `Message #${index}`;
-        }
-      },
-
-      updateSignature() {
-        this.signature = this.$crypto.Signature.fromRandomScalar();
-        this.messages = this.signature.generateValidMessages(this.publicKey, 3);
-      },
-
-      moreMessages() {
-        const messages = this.signature.generateValidMessages(this.publicKey, 3);
-        for (let message of messages) {
-          this.messages.push(message);
-        }
-      }
-    }
-  }
+  },
+};
 </script>

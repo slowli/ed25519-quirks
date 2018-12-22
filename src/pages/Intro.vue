@@ -81,7 +81,8 @@
       the verifier is replaced with a cryptographic hash function <code>Hash</code>, which, when the verifier’s output
       is requested, hashes all data sent so far by the prover together with the message <code>M</code> being signed.
       In other words, <code>h := Hash(R ‖ M)</code>, where <code>‖</code> denotes concatenation of bytes.
-      If the cryptographic hash function models a <a href="https://en.wikipedia.org/wiki/Random_oracle">random oracle</a>,
+      If the cryptographic hash function models
+      a <a href="https://en.wikipedia.org/wiki/Random_oracle">random oracle</a>,
       the resulting scheme (known as <a href="https://patents.google.com/patent/US4995082">Schnorr signature scheme</a>)
       is secure.
     </p>
@@ -108,9 +109,9 @@
   </div>
 </template>
 <script>
-  import Equation from '../components/Equation.vue';
+import Equation from '../components/Equation.vue';
 
-  export default {
-    components: { Equation }
-  }
+export default {
+  components: { Equation },
+};
 </script>

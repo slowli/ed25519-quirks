@@ -191,83 +191,86 @@
 </template>
 
 <script>
-  import DataRow from '../components/DataRow.vue';
-  import Equation from '../components/Equation.vue';
-  import Seed from '../components/Seed.vue';
-  import Status from '../components/Status.vue';
-  import withEncoding from '../mixins/withEncoding';
+import DataRow from '../components/DataRow.vue';
+import Equation from '../components/Equation.vue';
+import Seed from '../components/Seed.vue';
+import Status from '../components/Status.vue';
+import withEncoding from '../mixins/withEncoding';
 
-  export default {
-    components: { Equation, DataRow, Seed, Status },
-    mixins: [ withEncoding ],
+export default {
+  components: {
+    Equation, DataRow, Seed, Status,
+  },
+  mixins: [withEncoding],
 
-    data() {
-      const keypair = new this.$crypto.Keypair();
-      const message = 'Hello, world!';
-      const signature = keypair.sign(this.$Buffer.from(message)).bytes();
+  data() {
+    const keypair = new this.$crypto.Keypair();
+    const message = 'Hello, world!';
+    const signature = keypair.sign(this.$Buffer.from(message)).bytes();
 
-      return {
-        keypair,
-        message,
-        signedMessage: message,
-        signer: this.$Buffer.from(keypair.publicKey().bytes()).toString(this.encoding),
-        verifySignature: this.$Buffer.from(signature).toString(this.encoding),
-      }
+    return {
+      keypair,
+      message,
+      signedMessage: message,
+      signer: this.$Buffer.from(keypair.publicKey().bytes()).toString(this.encoding),
+      verifySignature: this.$Buffer.from(signature).toString(this.encoding),
+    };
+  },
+
+  computed: {
+    signature() {
+      const binaryMessage = this.$Buffer.from(this.message, 'utf8');
+      return this.keypair.sign(binaryMessage);
     },
 
-    computed: {
-      signature() {
-        const binaryMessage = this.$Buffer.from(this.message, 'utf8');
-        return this.keypair.sign(binaryMessage);
-      },
+    verification() {
+      const binaryMessage = this.$Buffer.from(this.signedMessage, 'utf8');
+      let publicKey; let signature; let
+        verification;
+      let signerParseError = false;
+      let signatureParseError = false;
 
-      verification() {
-        const binaryMessage = this.$Buffer.from(this.signedMessage, 'utf8');
-        let publicKey, signature, verification;
-        let signerParseError = false;
-        let signatureParseError = false;
+      try {
+        const buffer = this.$Buffer.from(this.signer, this.encoding);
+        publicKey = this.$crypto.PublicKey.parse(buffer);
+      } catch (e) {
+        signerParseError = true;
+      }
 
-        try {
-          const buffer = this.$Buffer.from(this.signer, this.encoding);
-          publicKey = this.$crypto.PublicKey.parse(buffer);
-        } catch (e) {
-          signerParseError = true;
+      try {
+        signature = this.$Buffer.from(this.verifySignature, this.encoding);
+        if (!signerParseError) {
+          // An error might occur here if the scalar has set upper bits.
+          verification = publicKey.verification(binaryMessage, signature);
         }
+      } catch (e) {
+        signatureParseError = true;
+      }
 
-        try {
-          signature = this.$Buffer.from(this.verifySignature, this.encoding);
-          if (!signerParseError) {
-            // An error might occur here if the scalar has set upper bits.
-            verification = publicKey.verification(binaryMessage, signature);
-          }
-        } catch (e) {
-          signatureParseError = true;
-        }
-
-        if (signerParseError || signatureParseError) {
-          return {
-            error: true,
-            signerParseError,
-            signatureParseError,
-          };
-        }
-
+      if (signerParseError || signatureParseError) {
         return {
-          error: verification.decompressionError(),
-          decompressionError: verification.decompressionError(),
-          hashScalar: verification.hashScalar(),
-          computedPoint: verification.computedPoint(),
-          success: verification.success(),
+          error: true,
+          signerParseError,
+          signatureParseError,
         };
       }
-    },
 
-    methods: {
-      copyFromSigning() {
-        this.signedMessage = this.message;
-        this.signer = this.repr(this.keypair.publicKey().bytes());
-        this.verifySignature = this.repr(this.signature.bytes());
-      }
-    }
-  };
+      return {
+        error: verification.decompressionError(),
+        decompressionError: verification.decompressionError(),
+        hashScalar: verification.hashScalar(),
+        computedPoint: verification.computedPoint(),
+        success: verification.success(),
+      };
+    },
+  },
+
+  methods: {
+    copyFromSigning() {
+      this.signedMessage = this.message;
+      this.signer = this.repr(this.keypair.publicKey().bytes());
+      this.verifySignature = this.repr(this.signature.bytes());
+    },
+  },
+};
 </script>

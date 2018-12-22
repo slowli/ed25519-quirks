@@ -13,6 +13,7 @@ export const TextEncoder = global.TextEncoder || class {
     }
   }
 
+  // eslint-disable-next-line class-methods-use-this
   encode(str) {
     return Buffer.from(str, 'utf8');
   }
@@ -25,6 +26,7 @@ export const TextDecoder = global.TextDecoder || class {
     }
   }
 
+  // eslint-disable-next-line class-methods-use-this
   decode(buffer) {
     return Buffer.from(buffer).toString('utf8');
   }

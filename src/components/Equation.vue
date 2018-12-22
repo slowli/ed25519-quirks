@@ -4,9 +4,9 @@
   </p>
 </template>
 <script>
-  export default {
-    name: "Equation"
-  }
+export default {
+  name: 'Equation',
+};
 </script>
 <style>
   .equation {

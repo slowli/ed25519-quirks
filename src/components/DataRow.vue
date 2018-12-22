@@ -31,12 +31,12 @@
   }
 </style>
 <script>
-  export default {
-    name: "DataRow",
-    props: {
-      name: { type: String, required: true },
-      wrapper: { type: String, default: '"$"' },
-      data: { type: String, default: '' }
-    }
-  }
+export default {
+  name: 'DataRow',
+  props: {
+    name: { type: String, required: true },
+    wrapper: { type: String, default: '"$"' },
+    data: { type: String, default: '' },
+  },
+};
 </script>

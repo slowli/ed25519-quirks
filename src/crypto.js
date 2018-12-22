@@ -1,4 +1,6 @@
-import { Keypair, PublicKey, RandomScalar, Signature } from '../wasm/pkg/ed25519_quirks';
+import {
+  Keypair, PublicKey, RandomScalar, Signature,
+} from '../wasm/pkg/ed25519_quirks';
 
 const SMALL_SUBGROUP = (() => {
   const iter = PublicKey.smallSubgroup();
@@ -13,12 +15,13 @@ const SMALL_SUBGROUP = (() => {
   return smallSubgroup;
 })();
 
-export function plugin(Vue) {
+export default function (Vue) {
+  // eslint-disable-next-line no-param-reassign
   Vue.prototype.$crypto = {
     Keypair,
     PublicKey,
     RandomScalar,
     Signature,
-    SMALL_SUBGROUP
+    SMALL_SUBGROUP,
   };
 }

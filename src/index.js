@@ -6,8 +6,8 @@ import router from './router';
 import App from './App.vue';
 import './encoding';
 
-import('./crypto').then(crypto => {
-  Vue.use(crypto.plugin);
+import('./crypto').then(({ default: crypto }) => {
+  Vue.use(crypto);
   Vue.use(Vue => {
     Vue.prototype.$Buffer = Buffer;
     Vue.prototype.$copy = copy;

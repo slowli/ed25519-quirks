@@ -130,46 +130,46 @@
   </div>
 </template>
 <script>
-  import DataRow from '../components/DataRow.vue';
-  import Seed from '../components/Seed.vue';
-  import Status from '../components/Status.vue';
-  import withEncoding from '../mixins/withEncoding';
+import DataRow from '../components/DataRow.vue';
+import Seed from '../components/Seed.vue';
+import Status from '../components/Status.vue';
+import withEncoding from '../mixins/withEncoding';
 
-  export default {
-    components: { DataRow, Seed, Status },
-    mixins: [withEncoding],
+export default {
+  components: { DataRow, Seed, Status },
+  mixins: [withEncoding],
 
-    data() {
-      const keypair = new this.$crypto.Keypair();
-      const message = 'Hello, world!';
+  data() {
+    const keypair = new this.$crypto.Keypair();
+    const message = 'Hello, world!';
 
-      return {
-        keypair,
-        message,
-        randomScalar: new this.$crypto.RandomScalar()
-      }
+    return {
+      keypair,
+      message,
+      randomScalar: new this.$crypto.RandomScalar(),
+    };
+  },
+
+  computed: {
+    signature() {
+      const binaryMessage = this.$Buffer.from(this.message, 'utf8');
+      return this.keypair.sign(binaryMessage);
     },
 
-    computed: {
-      signature() {
-        const binaryMessage = this.$Buffer.from(this.message, 'utf8');
-        return this.keypair.sign(binaryMessage);
-      },
-
-      randomizedSignature() {
-        const binaryMessage = this.$Buffer.from(this.message, 'utf8');
-        return this.keypair.signWithScalar(binaryMessage, this.randomScalar);
-      },
-
-      modifiedScalar() {
-        return this.signature.modifiedScalar();
-      }
+    randomizedSignature() {
+      const binaryMessage = this.$Buffer.from(this.message, 'utf8');
+      return this.keypair.signWithScalar(binaryMessage, this.randomScalar);
     },
 
-    methods: {
-      generateScalar() {
-        this.randomScalar = new this.$crypto.RandomScalar();
-      }
-    }
-  };
+    modifiedScalar() {
+      return this.signature.modifiedScalar();
+    },
+  },
+
+  methods: {
+    generateScalar() {
+      this.randomScalar = new this.$crypto.RandomScalar();
+    },
+  },
+};
 </script>

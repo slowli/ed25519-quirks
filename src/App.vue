@@ -146,23 +146,23 @@
   }
 </style>
 <script>
-  export default {
-    data() {
-      let encoding = localStorage.getItem('encoding') || '';
-      if (['hex', 'base64'].indexOf(encoding) < 0) {
-        encoding = 'base64';
-        localStorage.setItem('encoding', encoding);
-      }
-
-      return {
-        encoding
-      };
-    },
-
-    methods: {
-      updateEncoding(encoding) {
-        localStorage.setItem('encoding', encoding);
-      }
+export default {
+  data() {
+    let encoding = localStorage.getItem('encoding') || '';
+    if (['hex', 'base64'].indexOf(encoding) < 0) {
+      encoding = 'base64';
+      localStorage.setItem('encoding', encoding);
     }
-  };
+
+    return {
+      encoding,
+    };
+  },
+
+  methods: {
+    updateEncoding(encoding) {
+      localStorage.setItem('encoding', encoding);
+    },
+  },
+};
 </script>
