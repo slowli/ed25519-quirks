@@ -1,9 +1,15 @@
 {
   "parserOptions": {
-    "ecmaVersion": 2017
+    "ecmaVersion": 2017,
+    "parser": "babel-eslint"
   },
-  "extends": "plugin:vue/recommended",
+  "extends": [
+    "airbnb-base",
+    "plugin:vue/recommended"
+  ],
   "rules": {
+    "max-len": ["error", 120],
+
     "vue/max-attributes-per-line": ["error", {
       "singleline": 2,
       "multiline": {
