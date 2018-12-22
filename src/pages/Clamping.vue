@@ -18,8 +18,8 @@
     <p>
       For realsies, tho: clamping breaks the linear relation between secret and public keys, so stuff like
       <a href="https://github.com/bitcoin/bips/blob/master/bip-0032.mediawiki">hierarchical key derivation</a>
-      (or plain outsourced vanity address grinding) become difficult compared to cryptosystems with such a relationship
-      (e.g., the secp256k1 elliptic curve with either ECDSA or Schnorr).
+      or plain outsourced vanity address grinding becomes difficult compared to cryptosystems
+      with such a relationship (e.g., the secp256k1 elliptic curve with either ECDSA or Schnorr).
       In some cases, the damage is irreparable: as clamping leaves space for just <code>2<sup>251</sup></code>
       secret scalars as opposed to <code>ℓ = 2<sup>252</sup> + …</code> possibilities, arithmetic on public keys
       that would map to secret keys is impossible. It is relatively easy to get rid of restrictions by not clamping
