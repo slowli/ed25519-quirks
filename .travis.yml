@@ -35,7 +35,7 @@ script:
   - npm run lint-wasm:fmt
   - npm run lint-wasm:check
   - npm run lint-wasm:clippy
-  - npm run test-wasm
+  - npm run test-wasm -- --firefox --chrome
   # Front-end checks
   - npm run lint-web
   - npm test
