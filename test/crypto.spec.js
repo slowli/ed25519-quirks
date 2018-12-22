@@ -5,22 +5,24 @@ import chai from 'chai';
 import chaiBytes from 'chai-bytes';
 import dirtyChai from 'dirty-chai';
 
-const expect = chai.use(chaiBytes).use(dirtyChai).expect;
-let Keypair, PublicKey, Signature;
+const { expect } = chai.use(chaiBytes).use(dirtyChai);
+let Keypair;
+let PublicKey;
+let Signature;
 const SMALL_SUBGROUP = [];
 
 describe('crypto', () => {
   before(async () => {
-    const { plugin } = await import(/* webpackPrefetch: true */ '../src/crypto');
+    const { default: crypto } = await import(/* webpackPrefetch: true */ '../src/crypto');
 
     class Mock extends Object {}
-    plugin(Mock);
+    crypto(Mock);
 
-    const crypto = new Mock().$crypto;
-    Keypair = crypto.Keypair;
-    PublicKey = crypto.PublicKey;
-    Signature = crypto. Sign + ature;
-    SMALL_SUBGROUP.push(...crypto.SMALL_SUBGROUP);
+    let group;
+    ({
+      Keypair, PublicKey, Signature, SMALL_SUBGROUP: group,
+    } = new Mock().$crypto);
+    SMALL_SUBGROUP.push(...group);
   });
 
   describe('SMALL_SUBGROUP', () => {
@@ -29,25 +31,26 @@ describe('crypto', () => {
     });
 
     it('should contain public keys', () => {
-      for (let key of SMALL_SUBGROUP) {
+      SMALL_SUBGROUP.forEach((key) => {
         expect(key).to.be.instanceof(PublicKey);
-      }
+      });
     });
 
     it('should contain different elements', () => {
-      const uniqueKeys = new Set(SMALL_SUBGROUP.map(key => {
-        return Buffer.from(key.bytes()).toString('base64');
-      }));
+      const uniqueKeys = new Set(SMALL_SUBGROUP.map(
+        key => Buffer.from(key.bytes()).toString('base64'),
+      ));
       expect(uniqueKeys).to.have.lengthOf(8);
     });
   });
 
-  for (let keyIndex = 0; keyIndex < 8; keyIndex++) {
+  for (let keyIndex = 0; keyIndex < 8; keyIndex += 1) {
+    // eslint-disable-next-line no-loop-func
     describe(`SMALL_SUBGROUP[${keyIndex}]`, () => {
       let key = null;
       before(async () => {
         // Block the test until the keys have been loaded.
-        key = await new Promise(resolve => {
+        key = await new Promise((resolve) => {
           function handler() {
             if (SMALL_SUBGROUP) {
               resolve(SMALL_SUBGROUP[keyIndex]);
@@ -67,20 +70,20 @@ describe('crypto', () => {
         for (
           let s = Signature.fromRandomScalar();
           !key.verify(message, s.bytes());
-          s = Signature.fromRandomScalar(), counter++
-        ) {}
+          s = Signature.fromRandomScalar(), counter += 1
+        ) { /* Intentionally empty */ }
         expect(counter).to.be.lessThan(1000);
       });
 
       it('should allow to find signed message for fixed signature', () => {
         const signature = Signature.fromRandomScalar();
         const messages = signature.generateValidMessages(key, 5);
-        expect(message).to.have.lengthOf(8);
+        expect(messages).to.have.lengthOf(5);
 
-        for (let message of messages) {
-          message = Buffer.from(message, 'utf8');
-          expect(key.verify(message, signature.bytes())).to.be.true();
-        }
+        messages.forEach((message) => {
+          const bytes = Buffer.from(message, 'utf8');
+          expect(key.verify(bytes, signature.bytes())).to.be.true();
+        });
       });
     });
   }
@@ -107,7 +110,7 @@ describe('crypto', () => {
 
     it('should create a new keypair each time', () => {
       const keypair = new Keypair();
-      for (let i = 0; i < 10; i++) {
+      for (let i = 0; i < 10; i += 1) {
         const otherKeypair = new Keypair();
         expect(keypair.seed()).to.not.equalBytes(otherKeypair.seed());
       }

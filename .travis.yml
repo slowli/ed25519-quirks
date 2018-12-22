@@ -37,6 +37,8 @@ script:
   - npm run lint-wasm:clippy
   - npm run test-wasm
   # Front-end checks
+  - npm run lint-web
+  - npm test
   - npm run build
 
 deploy:
