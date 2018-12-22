@@ -35,8 +35,11 @@ To serve the app locally with the Webpack dev server, run
 npm start
 ```
 
+(You may need to build WASM first, it's not done automatically.)
+
 ## Testing
 
+To run tests, use `npm test` (for front-end tests) and `npm run test-wasm` (for WASM tests).
 Consult [`package.json`](package.json) for the full list of linting and testing commands.
 
 ## License
