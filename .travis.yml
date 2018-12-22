@@ -10,7 +10,6 @@ branches:
 
 cache:
   directories:
-    - node_modules
     - wasm/target
     - $HOME/.cargo
 
