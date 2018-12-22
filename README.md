@@ -1,5 +1,16 @@
 # Ed25519 Quirks
 
+[![Build status][travis-image]][travis-url]
+[![Live website][website-image]][website-url]
+[![License: Apache-2.0][license-image]][license-url] 
+
+[travis-image]: https://img.shields.io/travis/com/slowli/ed25519-quirks.svg
+[travis-url]: https://travis-ci.com/slowli/ed25519-quirks/
+[website-image]: https://img.shields.io/badge/website-live-blue.svg
+[website-url]: https://slowli.github.io/ed25519-quirks/
+[license-image]: https://img.shields.io/github/license/slowli/ed25519-quirks.svg
+[license-url]: https://github.com/slowli/ed25519-quirks/blob/master/LICENSE
+
 Single-page web app demonstrating some of Ed25519 peculiarities. Built with the Rust/WASM toolchain
 and Vue.
 
