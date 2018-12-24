@@ -8,14 +8,19 @@ import './encoding';
 
 import('./crypto').then(({ default: crypto }) => {
   Vue.use(crypto);
-  Vue.use(Vue => {
-    Vue.prototype.$Buffer = Buffer;
-    Vue.prototype.$copy = copy;
+  Vue.use((vue) => {
+    // eslint-disable-next-line no-param-reassign
+    vue.prototype.$Buffer = Buffer;
+    // eslint-disable-next-line no-param-reassign
+    vue.prototype.$copy = copy;
   });
 
+  // eslint-disable-next-line no-new
   new Vue({
     el: '#app',
     router,
-    render: createElement => createElement(App)
+    render: createElement => createElement(App),
   });
-}).catch(e => console.error(e));
+}).catch((err) => {
+  document.getElementById('loading-message').innerText = `Loading failed: ${err}`;
+});
