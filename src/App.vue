@@ -101,7 +101,8 @@
 
       <footer class="page-footer small text-muted">
         <span class="copyright">
-          © 2018 Alex Ostrovski
+          © 2018 Alex Ostrovski.
+          Licensed under <a rel="license" href="https://www.apache.org/licenses/LICENSE-2.0">Apache 2.0</a>.
         </span>
         <div class="float-none float-sm-right">
           <RouterLink :to="{ name: 'about' }">About</RouterLink>&nbsp;•
