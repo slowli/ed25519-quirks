@@ -149,6 +149,12 @@ impl PublicKey {
         self.0.verify::<Sha512>(message, &ed_signature).is_ok()
     }
 
+    /// Produces `Verification` object for the given signed message.
+    ///
+    /// # Exceptions
+    ///
+    /// This method will return an error if the signature has an invalid format (e.g.,
+    /// not 64 bytes long).
     pub fn verification(&self, message: &[u8], signature: &[u8]) -> Result<Verification, JsValue> {
         let ed_signature = ed25519::Signature::from_bytes(signature)
             .map_err(|_| JsValue::from_str("invalid signature"))?;
