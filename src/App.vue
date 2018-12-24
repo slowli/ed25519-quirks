@@ -47,7 +47,7 @@
                   <h6 class="dropdown-header">
                     Encoding
                   </h6>
-                  <form class="mx-3 my-1">
+                  <form class="mx-3 my-1" @submit.prevent="">
                     <div class="custom-control custom-radio custom-control-inline">
                       <input
                         id="encoding-hex"

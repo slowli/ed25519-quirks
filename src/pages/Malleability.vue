@@ -37,7 +37,7 @@
       as a scalar component of the signature will always fail.
     </p>
 
-    <form>
+    <form @submit.prevent="">
       <Seed v-model="keypair" :encoding="encoding" />
       <div class="form-row mb-3">
         <label for="message" class="col-md-3 col-lg-2 col-form-label">Message <code>M</code></label>

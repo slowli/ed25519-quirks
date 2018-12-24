@@ -38,7 +38,7 @@
       by the point order (1, 2, 4 or 8). In this case, signature <code>([s]B, s)</code> will still be valid.
     </p>
 
-    <form>
+    <form @submit.prevent="">
       <div class="form-group form-row">
         <label class="col-md-3 col-lg-2 col-form-label pt-0">Torsion point</label>
         <div class="col-md-9 col-lg-10">

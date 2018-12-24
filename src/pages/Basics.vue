@@ -14,7 +14,7 @@
       from a cryptographically secure RNG.
     </p>
 
-    <form class="mb-3">
+    <form class="mb-3" @submit.prevent="">
       <Seed v-model="keypair" :encoding="encoding" />
     </form>
 
@@ -64,7 +64,7 @@
       can leak the secret key, so this is an understandable design choice.
     </p>
 
-    <form class="mb-3">
+    <form class="mb-3" @submit.prevent="">
       <div class="form-row">
         <label for="message" class="col-md-3 col-lg-2 col-form-label">Message <code>M</code></label>
         <div class="col-md-9 col-lg-10">
@@ -118,7 +118,7 @@
     <p>Verification uses the equation following from Schnorr and the modified signing procedure:</p>
     <Equation>[s]B == R + [H(R ‖ A ‖ M)]A.</Equation>
 
-    <form>
+    <form @submit.prevent="">
       <div class="form-row mb-2">
         <label for="signed-message" class="col-md-3 col-lg-2 col-form-label">Message <code>M</code></label>
         <div class="col-md-9 col-lg-10">
