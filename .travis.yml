@@ -40,10 +40,11 @@ script:
   - npm run lint-web
   - npm test
 
+before_deploy:
+  - WEBPACK_PUBLIC_PATH=/ed22519-quirks npm run build-web
 deploy:
   provider: pages
   skip_cleanup: true
-  # `dist` directory is built as a part of `script` tasks, in `npm run build`.
   local_dir: dist
   github_token: $GITHUB_TOKEN
   on:

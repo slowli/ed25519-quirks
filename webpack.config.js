@@ -3,10 +3,13 @@ const CopyWebpackPlugin = require('copy-webpack-plugin');
 const { VueLoaderPlugin } = require('vue-loader');
 const path = require('path');
 
+const publicPath = process.env.WEBPACK_PUBLIC_PATH || '/';
+
 module.exports = {
   entry: './src/index',
   output: {
     path: path.resolve(__dirname, 'dist'),
+    publicPath,
     filename: 'bootstrap.js',
   },
   module: {
