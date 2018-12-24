@@ -42,7 +42,10 @@ npm start
 To run tests, use `npm test` (for front-end tests) and `npm run test-wasm` (for WASM tests).
 Be aware that the `test-wasm` command requires specifying browsers used for testing as flags
 (e.g., `-- --firefox`).
+
 Consult [`package.json`](package.json) for the full list of linting and testing commands.
+Note that Rust-related linting requires additional components (`fmt` and `clippy`) installed as a part
+of the relevant toolchain.
 
 ## License
 
