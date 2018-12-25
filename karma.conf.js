@@ -1,6 +1,5 @@
 const webpackConfig = require('./webpack.config.js');
 webpackConfig.mode = 'none';
-webpackConfig.output.filename = '[name].js';
 
 module.exports = (config) => {
   config.set({
