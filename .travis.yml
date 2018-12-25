@@ -41,7 +41,7 @@ script:
   - npm test
 
 before_deploy:
-  - WEBPACK_PUBLIC_PATH=/ed22519-quirks npm run build-web
+  - WEBPACK_PUBLIC_PATH=/ed25519-quirks/ npm run build-web
 deploy:
   provider: pages
   skip_cleanup: true
