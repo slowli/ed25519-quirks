@@ -1,6 +1,7 @@
 export default {
   props: {
     encoding: { type: String, default: 'base64' },
+    htmlFragments: { type: Object, default: {} },
   },
   computed: {
     repr() {

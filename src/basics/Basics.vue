@@ -1,18 +1,7 @@
 <template>
+  <!-- eslint-disable vue/no-v-html -->
   <div>
-    <p class="lead">
-      As with other digital signature schemes, Ed25519 consists of three protocols: key generation,
-      signing and verification. They are similar, but distinct, from the generic Schnorr scheme.
-    </p>
-
-    <h3 id="generation">
-      Key Generation
-    </h3>
-    <p>
-      Ed25519 does not match secret keys to scalars.
-      Instead, a secret scalar is generated from a <em>seed</em>, a 32-byte string, which should be filled at random
-      from a cryptographically secure RNG.
-    </p>
+    <div v-html="htmlFragments.generation"></div>
 
     <form class="mb-3" @submit.prevent="">
       <Seed v-model="keypair" :encoding="encoding" />
@@ -53,16 +42,10 @@
 
     <p>
       If you want to know why the secret scalar is clamped in this way, refer to
-      <RouterLink :to="{ name: 'clamping' }">this explanation</RouterLink>.
+      <a href="../clamping/">this explanation</a>.
     </p>
 
-    <h3 id="signing">
-      Signing
-    </h3>
-    <p>
-      Signing in Ed25519 is deterministic: it doesn't require an RNG during signing. A faulty RNG during signing
-      can leak the secret key, so this is an understandable design choice.
-    </p>
+    <div v-html="htmlFragments.signing"></div>
 
     <form class="mb-3" @submit.prevent="">
       <div class="form-row">
@@ -104,19 +87,7 @@
       wrapper="s = r + h*a = Sc(&quot;$&quot;)"
     />
 
-    <h3 id="verification" class="mt-4">
-      Verification
-      <a
-        href="#"
-        role="button"
-        class="badge badge-primary"
-        title="Copy from signing"
-        @click.prevent="copyFromSigning()"
-      ><i class="far fa-clipboard"></i></a>
-    </h3>
-
-    <p>Verification uses the equation following from Schnorr and the modified signing procedure:</p>
-    <Equation>[s]B == R + [H(R ‖ A ‖ M)]A.</Equation>
+    <div v-html="htmlFragments.verification"></div>
 
     <form @submit.prevent="">
       <div class="form-row mb-2">
@@ -191,15 +162,16 @@
 </template>
 
 <script>
+/* eslint-env jquery */
+
 import DataRow from '../components/DataRow.vue';
-import Equation from '../components/Equation.vue';
 import Seed from '../components/Seed.vue';
 import Status from '../components/Status.vue';
 import withEncoding from '../mixins/withEncoding';
 
 export default {
   components: {
-    Equation, DataRow, Seed, Status,
+    DataRow, Seed, Status,
   },
   mixins: [withEncoding],
 
@@ -263,6 +235,13 @@ export default {
         success: verification.success(),
       };
     },
+  },
+
+  mounted() {
+    $('#verification a').show().click((event) => {
+      event.preventDefault();
+      this.copyFromSigning();
+    });
   },
 
   methods: {
