@@ -1,0 +1,60 @@
+-
+  var basePath = '';
+  var pages;
+  var entryPoint;
+
+block pageInit
+
+-
+  var page = pages[entryPoint];
+  var keywords = page.keywords || [];
+  keywords.push('ed25519', 'cryptography');
+
+doctype html
+html(lang='en', prefix="og:http://ogp.me/ns#")
+  head
+    meta(charset='utf-8')
+    meta(name='language', content='en')
+    meta(name='viewport', content='width=device-width,initial-scale=1,shrink-to-fit=no')
+    meta(name='author', content='Alex Ostrovski')
+    meta(name='keywords', content=keywords.join(', '))
+    meta(name='description', content=page.description)
+    meta(name='og:title', content=page.title)
+    meta(name='og:description', content=page.description)
+    meta(name='og:type', content='article')
+
+    title #{page.title} | Ed25519 Quirks
+
+    //- External dependencies
+    link(rel='stylesheet', href='https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css', integrity='sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO', crossorigin='anonymous')
+    if page.interactive
+      link(rel='stylesheet', href='https://use.fontawesome.com/releases/v5.6.1/css/solid.css', integrity='sha384-aj0h5DVQ8jfwc8DA7JiM+Dysv7z+qYrFYZR+Qd/TwnmpDI6UaB3GJRRTdY8jYGS4', crossorigin='anonymous')
+      link(rel='stylesheet', href='https://use.fontawesome.com/releases/v5.6.1/css/regular.css', integrity='sha384-l+NpTtA08hNNeMp0aMBg/cqPh507w3OvQSRoGnHcVoDCS9OtgxqgR7u8mLQv8poF', crossorigin='anonymous')
+      link(rel='stylesheet', href='https://use.fontawesome.com/releases/v5.6.1/css/fontawesome.css', integrity='sha384-WK8BzK0mpgOdhCxq86nInFqSWLzR5UAsNg0MGX9aDaIIrFWQ38dGdhwnNCAoXFxL', crossorigin='anonymous')
+    link(rel='stylesheet', href=`${basePath}/base.css`)
+  body
+    block body
+    //- External scripts
+    script(src='https://code.jquery.com/jquery-3.3.1.slim.min.js', integrity='sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo', crossorigin='anonymous')
+    script(src='https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js', integrity='sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49', crossorigin='anonymous')
+    script(src='https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js', integrity='sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy', crossorigin='anonymous')
+
+    //- Encoding logic
+    script.
+      $(function() {
+        var encoding = localStorage.getItem('encoding') || '';
+        if (['hex', 'base64'].indexOf(encoding) < 0) {
+          encoding = 'base64';
+          localStorage.setItem('encoding', encoding);
+        }
+
+        $('input[name=encoding]').each(function(el) {
+          var $this = $(this);
+          $this.prop('checked', $this.val() === encoding);
+        }).change(function() {
+          localStorage.setItem('encoding', $('input[name=encoding]:checked').val());
+        });
+      });
+
+    if page.interactive
+      script(src=`${basePath}/${entryPoint}.js`)

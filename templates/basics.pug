@@ -1,0 +1,43 @@
+extends _layout
+
+block pageInit
+  -
+    entryPoint = 'basics';
+    basePath = '..';
+    pages = $pages;
+
+block main
+  p.lead.
+    As with other digital signature schemes, Ed25519 consists of three protocols: key generation,
+    signing and verification. They are similar, but distinct, from the generic Schnorr scheme.
+
+  #app
+    div(slot='generation')
+      h3#generation Key Generation
+      p.
+        Ed25519 does not match secret keys to scalars.
+        Instead, a secret scalar is generated from a <em>seed</em>, a 32-byte string, which should be filled at random
+        from a cryptographically secure RNG.
+
+    +loading
+
+    div(slot='signing')
+      h3#signing Signing
+      p.
+        Signing in Ed25519 is deterministic: it doesn't require an RNG during signing. A faulty RNG during signing
+        can leak the secret key, so this is an understandable design choice.
+
+    +loading
+
+    div(slot='verification')
+      h3#verification.mt-4
+        | Verification
+        |
+        a.badge.badge-primary(href='#', role='button', title='Copy from signing', style={ display: 'none' })
+          i.far.fa-clipboard
+
+      p Verification uses the equation following from Schnorr and the modified signing procedure:
+      +equation
+        | [s]B == R + [H(R ‖ A ‖ M)]A.
+
+    +loading

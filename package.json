@@ -5,6 +5,7 @@
   "main": "src/index.js",
   "private": true,
   "scripts": {
+    "clean": "rimraf dist",
     "lint-wasm:fmt": "cd wasm && cargo fmt -- --check",
     "lint-wasm:check": "cargo check --manifest-path wasm/Cargo.toml --all --tests",
     "lint-wasm:clippy": "cargo clippy --manifest-path wasm/Cargo.toml --all --tests -- -D warnings",
@@ -13,7 +14,7 @@
     "build-wasm": "wasm-pack build wasm",
     "test-wasm": "wasm-pack test wasm --headless",
     "test": "karma start --single-run",
-    "build-web": "webpack --config webpack.config.js --mode=production",
+    "build-web": "npm run clean && webpack --config webpack.config.js --mode=production",
     "build": "npm run build-wasm && npm run build-web",
     "start": "webpack-dev-server -d"
   },
@@ -45,6 +46,8 @@
     "karma-spec-reporter": "0.0.32",
     "karma-webpack": "^4.0.0-rc.5",
     "mocha": "^5.2.0",
+    "pug": "^2.0.3",
+    "rimraf": "^2.6.2",
     "vue-loader": "^15.4.2",
     "vue-template-compiler": "^2.5.21",
     "webpack": "^4.16.3",

@@ -1,0 +1,88 @@
+extends _base
+
+mixin equation
+  p.px-2.py-1.bg-light.equation.text-monospace
+    block
+
+mixin loading
+  .loading-progress.card.my-2.small
+    .card-body
+      h6.card-title Loading interactive parts…
+      p.card-text This may take some time. <i class="text-muted fas fa-spinner fa-spin"></i>
+
+block body
+  header.body-header
+    div.container
+      h1.display-3
+        a.d-block(href = basePath) Ed25519 Quirks
+      nav.navbar.navbar-expand-lg.navbar-light.px-0.pb-0
+        button.navbar-toggler.mb-1(
+          type="button"
+          data-toggle="collapse"
+          data-target="#main-nav-content"
+          aria-controls="main-nav-content"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        )
+          span.navbar-toggler-icon
+
+        div#main-nav-content.collapse.navbar-collapse
+          ul.navbar-nav.mr-auto
+            li.nav-item(class={ active: entryPoint === 'basics' })
+              a.nav-link(href=`${basePath}/basics/`) Basics
+            li.nav-item(class={ active: entryPoint === 'malleability' })
+              a.nav-link(href=`${basePath}/malleability/`) Malleability
+            li.nav-item(class={ active: entryPoint === 'wildcards' })
+              a.nav-link(href=`${basePath}/wildcards/`) Wildcards
+          ul.navbar-nav
+            li.nav-item.dropdown
+              a.nav-link.dropdown-toggle(
+                href='#'
+                role="button"
+                data-toggle="dropdown"
+                aria-haspopup="true"
+                aria-expanded="false"
+              ) Settings
+              .dropdown-menu.dropdown-menu-right
+                h6.dropdown-header Encoding
+                form#encoding-form.mx-3.my-1
+                  .custom-control.custom-radio.custom-control-inline
+                    input#encoding-hex.custom-control-input(
+                      type="radio"
+                      name="encoding"
+                      value="hex"
+                    )
+                    label.custom-control-label(for='encoding-hex') Hex
+                  .custom-control.custom-radio.custom-control-inline
+                    input#encoding-base64.custom-control-input(
+                      type="radio"
+                      name="encoding"
+                      value="base64"
+                    )
+                    label.custom-control-label(for='encoding-base64') Base64
+  .container.pt-4
+    block main
+    if page.prev || page.next
+      .row.mt-4
+        if page.prev !== undefined
+          .col-md-5.mb-1.mb-md-0
+            //- We need to consider a special case when the previous page has empty URL.
+            a(href = (page.prev === '') ? basePath : `${basePath}/${page.prev}/`)
+              span.text-muted ←
+              | #{pages[page.prev].title}
+        if page.next
+          .col-md-5.ml-auto.text-md-right
+            a(href=`${basePath}/${page.next}/`)
+              | #{pages[page.next].title}
+              span.text-muted →
+    footer.page-footer.small.text-muted
+      span.copyright
+        | © 2018 Alex Ostrovski. Licensed under
+        |
+        a(rel='license', href='https://www.apache.org/licenses/LICENSE-2.0') Apache 2.0
+        | .
+      .float-none.float-sm-right
+        a(href=`${basePath}/about/`) About
+        | &nbsp;•
+        |
+        a(href='https://github.com/slowli/ed25519-quirks') GitHub

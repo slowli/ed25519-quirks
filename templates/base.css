@@ -1,0 +1,39 @@
+code {
+  color: #6c7596;
+  padding: .1rem .2rem;
+  border-radius: .25rem;
+  background-color: #f8f9fa;
+}
+
+.body-header {
+  padding: 1rem 1rem 0;
+  background: #f4f4f4;
+  border-bottom: 1px solid #eee;
+}
+
+.body-header h1 a,
+.body-header h1 a:hover {
+  color: inherit !important;
+  text-decoration: none !important;
+}
+
+.body-header .nav-item {
+  border-bottom: 2px solid transparent;
+}
+
+.body-header .nav-item.active {
+  border-bottom: 2px solid;
+}
+
+.page-footer {
+  margin: 4rem -0.5rem 0 -0.5rem;
+  padding: 2rem 0 1.5rem;
+  border-top: 1px solid rgba(0, 0, 0, 0.15);
+}
+
+.equation {
+  font-size: 87.5%;
+  color: #6c7596;
+  margin-left: -.6rem;
+  border-left: 2px solid;
+}

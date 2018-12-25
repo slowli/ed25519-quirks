@@ -1,0 +1,23 @@
+extends _layout
+
+block pageInit
+  -
+    entryPoint = 'about';
+    basePath = '..';
+    pages = $pages;
+
+block main
+  p.lead This web app was made possible with the help of following awesome tech:
+  ul
+    li.
+      <a href="https://developer.mozilla.org/en-US/docs/WebAssembly/Concepts">WASM</a> – the virtual machine
+      for the Web
+    li.
+      <a href="https://www.rust-lang.org/">Rust programming language</a> and
+      <a href="https://rustwasm.github.io/">Rust → WASM toolchain</a> allowing to bring Rust safety and performance
+      to the browser
+    li.
+      <a href="https://dalek.rs/">dalek cryptographic libraries for Rust</a> for Ed25519 and low-level
+      Curve25519 routines
+    li <a href="https://vuejs.org/">Vue framework</a> for front-end
+  p See <a href="https://github.com/slowli/ed25519-quirks">source code of the app</a> for the full list.
