@@ -18,10 +18,7 @@ and Vue.
 
 You will need to install a Node / npm toolchain (preferably via a manager like [`nvm`])
 and a Rust toolchain (preferably via [`rustup`]). Both toolchains should be recent; e.g., Node 10-LTS (aka Dubnium)
-and nightly Rust >= 1.32 (so far, the WASM tools support nightly Rust only).
-You should also install [`wasm-pack`]. If you have multiple Rust toolchains installed locally,
-you should set the override for the project directory via `rustup override`, so that all Rust-related commands
-are executed on the nightly toolchain.
+and Rust >= 1.37. You should also install [`wasm-pack`].
 
 To (re)build the WASM file and its JS bindings, execute
 
