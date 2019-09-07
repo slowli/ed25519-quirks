@@ -146,7 +146,7 @@ impl PublicKey {
             Ok(signature) => signature,
             Err(_) => return false,
         };
-        self.0.verify::<Sha512>(message, &ed_signature).is_ok()
+        self.0.verify(message, &ed_signature).is_ok()
     }
 
     /// Produces `Verification` object for the given signed message.
@@ -186,7 +186,7 @@ impl PublicKey {
             hash_scalar,
             computed_point,
             decompression_error: public_key_point.is_none(),
-            result: self.0.verify::<Sha512>(message, &ed_signature).is_ok(),
+            result: self.0.verify(message, &ed_signature).is_ok(),
         })
     }
 }
@@ -242,7 +242,7 @@ impl Keypair {
     #[wasm_bindgen(constructor)]
     pub fn new() -> Self {
         let mut rng = CallbackRng;
-        Keypair(ed25519::Keypair::generate::<Sha512, _>(&mut rng))
+        Keypair(ed25519::Keypair::generate(&mut rng))
     }
 
     /// Constructs the keypair from a seed.
@@ -250,7 +250,7 @@ impl Keypair {
     pub fn from_seed(seed: &[u8]) -> Result<Keypair, JsValue> {
         let secret = ed25519::SecretKey::from_bytes(seed)
             .map_err(|_| JsValue::from_str("invalid seed length"))?;
-        let public = secret.expand::<Sha512>().into();
+        let public = ed25519::PublicKey::from(&secret);
         Ok(Keypair(ed25519::Keypair { secret, public }))
     }
 
@@ -272,22 +272,20 @@ impl Keypair {
     /// The scalar is derived as first 32 bytes of `SHA512(seed)` "clamped" as per Ed25519 spec:
     /// setting lowest 3 bits and the highest bit to 0, and the second-highest bit to 1.
     pub fn scalar(&self) -> Box<[u8]> {
-        Box::new({
-            let mut bytes = [0; 32];
-            bytes.copy_from_slice(&self.0.secret.expand::<Sha512>().to_bytes()[..32]);
-            bytes
-        })
+        let expanded_secret = ed25519::ExpandedSecretKey::from(&self.0.secret);
+        let mut bytes = [0; 32];
+        bytes.copy_from_slice(&expanded_secret.to_bytes()[..32]);
+        Box::new(bytes)
     }
 
     /// Returns the Ed25519 nonce used during signing.
     ///
     /// The nonce is equal to the upper 32 bytes of `SHA512(seed)`.
     pub fn nonce(&self) -> Box<[u8]> {
-        Box::new({
-            let mut bytes = [0; 32];
-            bytes.copy_from_slice(&self.0.secret.expand::<Sha512>().to_bytes()[32..]);
-            bytes
-        })
+        let expanded_secret = ed25519::ExpandedSecretKey::from(&self.0.secret);
+        let mut bytes = [0; 32];
+        bytes.copy_from_slice(&expanded_secret.to_bytes()[32..]);
+        Box::new(bytes)
     }
 
     /// Returns the public key part of this keypair.
@@ -318,9 +316,10 @@ pub struct Signature {
 
 impl Signature {
     fn new(keypair: &ed25519::Keypair, message: &[u8]) -> Self {
-        let signature = keypair.sign::<Sha512>(message);
+        let signature = keypair.sign(message);
 
-        let nonce = &keypair.secret.expand::<Sha512>().to_bytes()[32..];
+        let expanded_secret = ed25519::ExpandedSecretKey::from(&keypair.secret).to_bytes();
+        let nonce = &expanded_secret[32..];
         let mut hasher = Sha512::new();
         hasher.input(nonce);
         hasher.input(message);
@@ -356,9 +355,10 @@ impl Signature {
         let mut hash = [0; 64];
         hash.copy_from_slice(&hasher.result()[..]);
 
+        let expanded_secret = ed25519::ExpandedSecretKey::from(&keypair.secret).to_bytes();
         let secret_scalar = Scalar::from_bits({
             let mut bytes = [0; 32];
-            bytes.copy_from_slice(&keypair.secret.expand::<Sha512>().to_bytes()[..32]);
+            bytes.copy_from_slice(&expanded_secret[..32]);
             bytes
         });
         let signature_scalar =

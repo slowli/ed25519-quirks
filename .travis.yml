@@ -1,4 +1,4 @@
-dist: trusty
+dist: xenial
 addons:
   firefox: latest
   chrome: stable
@@ -14,7 +14,7 @@ cache:
     - $HOME/.cargo
 
 language: rust
-rust: nightly-2018-11-13
+rust: 1.37.0
 
 before_install:
   # Install Node
@@ -24,7 +24,8 @@ before_install:
   - rustfmt -V
   - rustup component add clippy-preview
   - cargo clippy -V
-  - rustup target add --toolchain nightly-2018-11-13 wasm32-unknown-unknown
+  # Install WASM toolchain
+  - rustup target add wasm32-unknown-unknown
   - curl https://rustwasm.github.io/wasm-pack/installer/init.sh -sSf | sh -s -- -f
 install:
   - npm ci
@@ -32,7 +33,6 @@ install:
 script:
   # Rust-related checks
   - npm run lint-wasm:fmt
-  - npm run lint-wasm:check
   - npm run lint-wasm:clippy
   - npm run test-wasm -- --firefox --chrome
   # Front-end checks (`npm run build` should be the first one, it builds WASM)

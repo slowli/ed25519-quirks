@@ -7,7 +7,6 @@
   "scripts": {
     "clean": "rimraf dist",
     "lint-wasm:fmt": "cd wasm && cargo fmt -- --check",
-    "lint-wasm:check": "cargo check --manifest-path wasm/Cargo.toml --all --tests",
     "lint-wasm:clippy": "cargo clippy --manifest-path wasm/Cargo.toml --all --tests -- -D warnings",
     "lint-wasm": "npm run lint-wasm:fmt && npm run lint-wasm:check && npm run lint-wasm:clippy",
     "lint-web": "eslint --ext .js,.vue src test",
