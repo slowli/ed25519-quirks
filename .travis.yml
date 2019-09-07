@@ -16,6 +16,10 @@ cache:
 language: rust
 rust: 1.37.0
 
+env:
+  global:
+    - BINARYEN_VER=version_89
+
 before_install:
   # Install Node
   - nvm install --lts 10 && nvm use 10
@@ -27,6 +31,14 @@ before_install:
   # Install WASM toolchain
   - rustup target add wasm32-unknown-unknown
   - curl https://rustwasm.github.io/wasm-pack/installer/init.sh -sSf | sh -s -- -f
+  - |
+    wget "https://github.com/WebAssembly/binaryen/releases/download/$BINARYEN_VER/binaryen-$BINARYEN_VER-x86_64-linux.tar.gz" -O binaryen.tar.gz
+    tar -xf binaryen.tar.gz "binaryen-$BINARYEN_VER/wasm-opt"
+    mkdir -p ~/.local/bin
+    export PATH="$PATH:~/.local/bin"
+    mv "binaryen-$BINARYEN_VER/wasm-opt" ~/.local/bin
+    rm -rf "binaryen-$BINARYEN_VER" binaryen.tar.gz
+
 install:
   - npm ci
 
@@ -36,7 +48,7 @@ script:
   - npm run lint-wasm:clippy
   - npm run test-wasm -- --firefox --chrome
   # Front-end checks (`npm run build` should be the first one, it builds WASM)
-  - npm run build
+  - npm run build-opt
   - npm run lint-web
   - npm test
 
