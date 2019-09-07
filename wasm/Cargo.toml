@@ -1,5 +1,6 @@
 [package]
 name = "ed25519-quirks"
+edition = "2018"
 version = "0.1.0"
 authors = ["Alex Ostrovski <ostrovski.alex@gmail.com>"]
 license = "Apache-2.0"
@@ -20,8 +21,18 @@ clear_on_drop = "0.2.3"
 num-bigint = "0.2.3"
 sha2 = { version = "0.8.0", default-features = false }
 rand_core = "0.4.0"
-curve25519-dalek = { version = "1.2.3", default-features = false, features = ["u64_backend"] }
-ed25519-dalek = { version = "1.0.0-pre.1", default-features = false, features = ["u64_backend"] }
+
+[dependencies.curve25519]
+package = "curve25519-dalek"
+version = "1.2.3"
+default-features = false
+features = ["u64_backend"]
+
+[dependencies.ed25519]
+package = "ed25519-dalek"
+version = "1.0.0-pre.1"
+default-features = false
+features = ["u64_backend"]
 
 [dev-dependencies]
 wasm-bindgen-test = "0.2.50"

@@ -1,13 +1,5 @@
 //! Rust part of Ed25519 Quirks.
 
-extern crate cfg_if;
-extern crate curve25519_dalek as curve25519;
-extern crate ed25519_dalek as ed25519;
-extern crate num_bigint;
-extern crate rand_core;
-extern crate sha2;
-extern crate wasm_bindgen;
-
 use cfg_if::cfg_if;
 use wasm_bindgen::prelude::*;
 
