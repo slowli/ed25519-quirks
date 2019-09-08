@@ -1,19 +1,9 @@
 import {
-  Keypair, PublicKey, RandomScalar, Signature,
+  Keypair, PublicKey, PublicKeyIter, RandomScalar, Signature,
 } from '../wasm/pkg/ed25519_quirks';
 
-const SMALL_SUBGROUP = (() => {
-  const iter = PublicKey.smallSubgroup();
-  const smallSubgroup = [];
-  for (let next = iter.next(); ; next = iter.next()) {
-    if (next.done()) {
-      break;
-    } else {
-      smallSubgroup.push(next.value());
-    }
-  }
-  return smallSubgroup;
-})();
+PublicKeyIter.prototype[Symbol.iterator] = function iter() { return this; };
+const SMALL_SUBGROUP = [...PublicKey.smallSubgroup()];
 
 export default function (Vue) {
   // eslint-disable-next-line no-param-reassign

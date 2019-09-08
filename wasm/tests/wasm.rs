@@ -25,10 +25,10 @@ fn small_subgroup_key() {
     let mut public_keys = PublicKey::small_subgroup();
     loop {
         let public_key = public_keys.next();
-        let public_key = if public_key.done() {
+        let public_key = if public_key.done {
             break;
         } else {
-            public_key.value()
+            public_key.value.unwrap()
         };
 
         let signature = Signature::from_random_scalar();

@@ -13,7 +13,6 @@ crate-type = ["cdylib", "rlib"]
 
 [dependencies]
 # WASM / Web stuff.
-cfg-if = "0.1.9"
 wasm-bindgen = "0.2.50"
 wee_alloc = { version = "0.4.5", optional = true }
 # Main dependencies.
@@ -38,7 +37,7 @@ features = ["u64_backend"]
 wasm-bindgen-test = "0.2.50"
 
 [features]
-default = ["clear_on_drop/no_cc"]
+default = ["wee_alloc", "clear_on_drop/no_cc"]
 
 [profile.release]
 lto = true

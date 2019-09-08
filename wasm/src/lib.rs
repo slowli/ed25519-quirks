@@ -1,16 +1,5 @@
 //! Rust part of Ed25519 Quirks.
 
-use cfg_if::cfg_if;
-use wasm_bindgen::prelude::*;
-
-cfg_if! {
-    if #[cfg(feature = "wee_alloc")] {
-        extern crate wee_alloc;
-        #[global_allocator]
-        static ALLOC: wee_alloc::WeeAlloc = wee_alloc::WeeAlloc::INIT;
-    }
-}
-
 use curve25519::{
     constants::{BASEPOINT_ORDER, ED25519_BASEPOINT_TABLE, EIGHT_TORSION},
     edwards::{CompressedEdwardsY, EdwardsPoint},
@@ -19,6 +8,11 @@ use curve25519::{
 use num_bigint::BigUint;
 use rand_core::{CryptoRng, RngCore};
 use sha2::{Digest, Sha512};
+use wasm_bindgen::prelude::*;
+
+#[cfg(feature = "wee_alloc")]
+#[global_allocator]
+static ALLOC: wee_alloc::WeeAlloc = wee_alloc::WeeAlloc::INIT;
 
 ////////// Binding to a JavaScript CSPRNG. ////////////
 
@@ -64,39 +58,34 @@ impl CryptoRng for CallbackRng {}
 
 ////////// JS-compatible iterator for `PublicKey`s. //////////
 
-/// Output of a `PublicKey` iterator.
+/// Iterator returned by `PublicKeyIter`.
 #[wasm_bindgen]
-pub struct MaybePublicKey(Option<PublicKey>);
+pub struct PublicKeyIterOutput {
+    /// Value yielded by the iterator.
+    #[wasm_bindgen(readonly)]
+    pub value: Option<PublicKey>,
 
-#[wasm_bindgen]
-impl MaybePublicKey {
-    /// Is the iterator done at this point?
-    pub fn done(&self) -> bool {
-        self.0.is_none()
-    }
-
-    /// Unwraps the `PublicKey` contained in this output.
-    ///
-    /// This method is only safe to call if `done()` is `false`.
-    pub fn value(self) -> PublicKey {
-        self.0.unwrap()
-    }
+    /// Is iterator done?
+    #[wasm_bindgen(readonly)]
+    pub done: bool,
 }
 
 /// Iterator over `PublicKey`s returned by `PublicKey::small_subgroup()`.
-// This should probably be extracted a separate crate, but this seems to be unsupported
-// by `wasm-bindgen` right now.
 #[wasm_bindgen]
-pub struct PublicKeyIterator {
+pub struct PublicKeyIter {
     inner: Box<dyn Iterator<Item = PublicKey>>,
 }
 
 #[allow(clippy::should_implement_trait)]
 #[wasm_bindgen]
-impl PublicKeyIterator {
+impl PublicKeyIter {
     /// Advances the iterator.
-    pub fn next(&mut self) -> MaybePublicKey {
-        MaybePublicKey(self.inner.next())
+    pub fn next(&mut self) -> PublicKeyIterOutput {
+        let value = self.inner.next();
+        PublicKeyIterOutput {
+            done: value.is_none(),
+            value,
+        }
     }
 }
 
@@ -118,11 +107,11 @@ impl PublicKey {
 
     /// Returns the public keys corresponding to 8 torsion points on the Ed25519 curve.
     #[wasm_bindgen(js_name = smallSubgroup)]
-    pub fn small_subgroup() -> PublicKeyIterator {
+    pub fn small_subgroup() -> PublicKeyIter {
         let keys = EIGHT_TORSION.iter().map(|point| {
             PublicKey(ed25519::PublicKey::from_bytes(point.compress().as_bytes()).unwrap())
         });
-        PublicKeyIterator {
+        PublicKeyIter {
             inner: Box::new(keys),
         }
     }
