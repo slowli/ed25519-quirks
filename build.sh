@@ -22,4 +22,4 @@ mv "binaryen-$BINARYEN_VER/wasm-opt" "$HOME/.local/bin"
 rm -rf "binaryen-$BINARYEN_VER" binaryen.tar.gz
 
 # Build!
-PATH="$PATH:$HOME/.local/bin" npm run build-opt
+PATH="$PATH:$HOME/.local/bin" BINARYEN_CORES=1 npm run build-opt
