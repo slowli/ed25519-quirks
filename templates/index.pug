@@ -41,14 +41,15 @@ block main
     to zero in integer modulo groups: adding <code>O</code> to any point <code>A</code> results in <code>A</code>.
 
   p.
-    The Ed25519 group has <code>8ℓ</code> points, where the prime
+    The Ed25519 elliptic curve has <code>8ℓ</code> points, where the prime
   +equation
     | ℓ = 2<sup>252</sup> + 27742317777372353535851937790883648493
   p.
     So, unlike some other elliptic curves (say, secp256k1 used in Bitcoin and Ethereum cryptocurrencies),
-    the group is not prime-order itself. For a signature scheme, we still need a prime-order subgroup; it is created
-    by selecting a <em>basepoint</em> <code>B</code> with order <code>ℓ</code> and using it
-    as the group generator:
+    the elliptic curve is not a prime-order group itself. As per
+    <a href="https://en.wikipedia.org/wiki/Abelian_group#Classification">basis theorem for finite abelian groups</a>,
+    we can extract a prime-order subgroup by selecting a <em>basepoint</em> <code>B</code>
+    with order <code>ℓ</code> and using it as the group generator:
   +equation
     | G = { O, B, [2]B, [3]B, … [ℓ - 1]B };
   p.
@@ -60,9 +61,9 @@ block main
   p.
     As some other signature schemes based on elliptic curves, Ed25519 is essentially the non-interactive version
     of a proof of knowledge of a <a href="https://en.wikipedia.org/wiki/Discrete_logarithm">discrete logarithm</a>.
-    In the original interactive form of the proof-of-knowledge protocol, one proves that he knows
-    a scalar <code>a</code> corresponding to a certain point <code>A = [a]B</code> without revealing any information
-    about <code>a</code>. The protocol goes as follows:
+    In the original interactive form of the protocol, one proves that he knows
+    a scalar <code>a</code> corresponding to a certain group element <code>A = [a]B</code>
+    without revealing any information about <code>a</code>. The protocol goes as follows:
 
   ol
     li <strong>Prover:</strong> Choose a random scalar <code>r</code>.
@@ -90,7 +91,7 @@ block main
   p The Schnorr scheme for elliptic curves looks as follows:
   ul
     li.
-      <strong>Public parameters:</strong> A prime-order elliptic curve group with the basepoint <code>B</code>,
+      <strong>Public parameters:</strong> A prime-order group on an elliptic curve with the basepoint <code>B</code>,
       in which the discrete logarithm problem (finding scalar <code>a</code> given point <code>[a]B</code>)
       is believed to be hard.
     li.
