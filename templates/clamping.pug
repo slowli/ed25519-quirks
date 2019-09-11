@@ -33,13 +33,13 @@ block main
     <a href="https://moderncrypto.org/mail-archive/curves/2017/000860.html">it enables to not allow
     for the zero scalar</a> during signature generation.
     Setting lower 3 bits to zero
-    <a href="https://moderncrypto.org/mail-archive/curves/2017/000861.html"><em>might</em> protect</a>
+    <a href="https://moderncrypto.org/mail-archive/curves/2017/000861.html">might protect</a>
     against extracting the secret key by solving
     a fitting <a href="http://www.isg.rhul.ac.uk/~sdg/igor-slides.pdf">hidden number problem</a>
     (which were shown to be an effective attack vector for other cryptosystems, e.g., ECDSA).
 
   p.small.
-    Alternatively, setting lower bits is supposed to protect against
+    Alternatively, setting lower bits supposedly protects against
     <a href="https://crypto.stackexchange.com/questions/55632/libsodium-x25519-and-ed25519-small-order-check/55643#55643">small-subgroup
-    attacks</a>, but how these attacks are relevant to signing is a good question (as opposed to key exchange,
-    where small-subgroup attacks make complete sense).
+    attacks</a>, but relevance of these attacks to signing is a conundrum on its own
+    (originally, small-subgroup attacks apply to key exchange).

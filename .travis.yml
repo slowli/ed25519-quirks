@@ -1,4 +1,4 @@
-dist: trusty
+dist: xenial
 addons:
   firefox: latest
   chrome: stable
@@ -14,7 +14,11 @@ cache:
     - $HOME/.cargo
 
 language: rust
-rust: nightly-2018-11-13
+rust: 1.37.0
+
+env:
+  global:
+    - BINARYEN_VER=version_89
 
 before_install:
   # Install Node
@@ -24,19 +28,27 @@ before_install:
   - rustfmt -V
   - rustup component add clippy-preview
   - cargo clippy -V
-  - rustup target add --toolchain nightly-2018-11-13 wasm32-unknown-unknown
+  # Install WASM toolchain
+  - rustup target add wasm32-unknown-unknown
   - curl https://rustwasm.github.io/wasm-pack/installer/init.sh -sSf | sh -s -- -f
+  - |
+    wget -q "https://github.com/WebAssembly/binaryen/releases/download/$BINARYEN_VER/binaryen-$BINARYEN_VER-x86_64-linux.tar.gz" -O binaryen.tar.gz
+    tar -xf binaryen.tar.gz "binaryen-$BINARYEN_VER/wasm-opt"
+    mkdir -p ~/.local/bin
+    export PATH="$PATH:$HOME/.local/bin"
+    mv "binaryen-$BINARYEN_VER/wasm-opt" ~/.local/bin
+    rm -rf "binaryen-$BINARYEN_VER" binaryen.tar.gz
+
 install:
   - npm ci
 
 script:
   # Rust-related checks
   - npm run lint-wasm:fmt
-  - npm run lint-wasm:check
   - npm run lint-wasm:clippy
-  - npm run test-wasm -- --firefox --chrome
+  - npm run test-wasm -- --firefox
   # Front-end checks (`npm run build` should be the first one, it builds WASM)
-  - npm run build
+  - npm run build-opt
   - npm run lint-web
   - npm test
 

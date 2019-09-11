@@ -1,11 +1,5 @@
 //! Tests for the Rust / WASM part of Ed25519 Quirks.
 
-// Used internally by generated test code.
-#![allow(clippy::not_unsafe_ptr_arg_deref)]
-
-extern crate ed25519_quirks;
-extern crate wasm_bindgen_test;
-
 use ed25519_quirks::{Keypair, PublicKey, Signature};
 use wasm_bindgen_test::*;
 
@@ -31,10 +25,10 @@ fn small_subgroup_key() {
     let mut public_keys = PublicKey::small_subgroup();
     loop {
         let public_key = public_keys.next();
-        let public_key = if public_key.done() {
+        let public_key = if public_key.done {
             break;
         } else {
-            public_key.value()
+            public_key.value.unwrap()
         };
 
         let signature = Signature::from_random_scalar();
