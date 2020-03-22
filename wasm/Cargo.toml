@@ -33,9 +33,11 @@ features = ["u64_backend"]
 
 [dependencies.ed25519]
 package = "ed25519-dalek"
-version = "1.0.0-pre.3"
+version = "=1.0.0-pre.3"
 default-features = false
-features = ["std", "u64_backend"]
+# Kudos to the crate authors for checking signature scalar malleability by default;
+# however, we need malleability for our use case.
+features = ["std", "u64_backend", "legacy_compatibility"]
 
 [dev-dependencies]
 wasm-bindgen-test = "0.3.9"
