@@ -2,8 +2,8 @@
 
 # Build script for one-shot build environments.
 
-RUST_VERSION=1.37.0
-BINARYEN_VER=version_89
+RUST_VERSION=1.41.0
+BINARYEN_VER=version_91
 
 set -ex
 
