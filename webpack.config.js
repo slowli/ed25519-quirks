@@ -52,12 +52,14 @@ module.exports = {
       { from: './templates/base.css', to: 'base.css' },
       {
         from: './templates/*.pug',
-        ignore: '_*.pug',
+        ignore: ['_*.pug'],
         to: '[name]/index.html',
         toType: 'template',
 
         transformPath(targetPath) {
-          return targetPath.startsWith('index/index') ? 'index.html' : targetPath;
+          const isIndex = targetPath.startsWith('index/index') ||
+            targetPath.startsWith('index\\index');
+          return isIndex ? 'index.html' : targetPath;
         },
 
         transform(content, path) {

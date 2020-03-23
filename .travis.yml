@@ -1,7 +1,9 @@
-dist: xenial
+os: linux
+dist: trusty
 addons:
   firefox: latest
   chrome: stable
+
 branches:
   only:
     - master
@@ -14,15 +16,15 @@ cache:
     - $HOME/.cargo
 
 language: rust
-rust: 1.37.0
+rust: 1.41.0
 
 env:
   global:
-    - BINARYEN_VER=version_89
+    - BINARYEN_VER=version_91
 
 before_install:
   # Install Node
-  - nvm install --lts 10 && nvm use 10
+  - nvm install --lts 12 && nvm use 12
   # Install Rust components
   - rustup component add rustfmt-preview
   - rustfmt -V
@@ -58,6 +60,6 @@ deploy:
   provider: pages
   skip_cleanup: true
   local_dir: dist
-  github_token: $GITHUB_TOKEN
+  token: $GITHUB_TOKEN
   on:
     branch: master

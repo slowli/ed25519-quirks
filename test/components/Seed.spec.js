@@ -40,39 +40,46 @@ describe('Seed.vue', () => {
     expect(seed.find('input[type=text]').element.value).to.have.lengthOf(32 * 2);
   });
 
-  it('should display error if seed is invalid', () => {
+  it('should display error if seed is invalid', async () => {
     const seed = createSeed();
     expect(seed.find('.invalid-feedback').exists()).to.be.false();
 
     const input = seed.find('input[type=text]');
     input.element.value = 'invalid';
     input.trigger('input');
+    await seed.vm.$nextTick();
     expect(seed.find('.invalid-feedback').exists()).to.be.true();
   });
 
-  it('should update encoding of displayed valid seed', () => {
+  it('should update encoding of displayed valid seed', async () => {
     const seed = createSeed();
     const seedValue = $Buffer.from(seed.find('input[type=text]').element.value, 'base64');
     seed.setProps({ encoding: 'hex' });
+    await seed.vm.$nextTick();
     const updatedValue = $Buffer.from(seed.find('input[type=text]').element.value, 'hex');
     expect(updatedValue).to.equalBytes(seedValue);
   });
 
-  it('should not update encoding of displayed invalid seed', () => {
+  it('should not update encoding of displayed invalid seed', async () => {
     const seed = createSeed();
     const input = seed.find('input[type=text]');
     input.element.value = 'invalid';
     input.trigger('input');
     seed.setProps({ encoding: 'hex' });
+    await seed.vm.$nextTick();
     expect(input.element.value).to.equal('invalid');
   });
 
-  it('should update seed on demand', () => {
+  it('should update seed on demand', async () => {
     const seed = createSeed();
     const seeds = new Set();
     for (let i = 0; i < 5; i += 1) {
       seeds.add(seed.find('input[type=text]').element.value);
       seed.find('a[role=button]').trigger('click');
+
+      // We have a single `seed` component; i.e., loop iterations are not independent.
+      // eslint-disable-next-line no-await-in-loop
+      await seed.vm.$nextTick();
     }
     expect(seeds).to.have.lengthOf(5);
   });
