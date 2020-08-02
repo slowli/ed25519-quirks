@@ -37,7 +37,7 @@ script:
   # Rust-related checks
   - npm run lint-wasm:fmt
   - npm run lint-wasm:clippy
-  - npm run test-wasm -- --firefox
+  - npm run test-wasm -- --chrome
   # Front-end checks (`npm run build` should be the first one, it builds WASM)
   - npm run build-opt
   - npm run lint-web
