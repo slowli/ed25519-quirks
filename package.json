@@ -11,7 +11,7 @@
     "lint-wasm": "npm run lint-wasm:fmt && npm run lint-wasm:check && npm run lint-wasm:clippy",
     "lint-web": "eslint --ext .js,.vue src test",
     "build-wasm": "wasm-pack build wasm",
-    "optimize-wasm": "wasm-opt -Os wasm/pkg/ed25519_quirks_bg.wasm -o wasm/pkg/ed25519_quirks_bg.wasm",
+    "optimize-wasm": "wasm-opt -Os --enable-mutable-globals wasm/pkg/ed25519_quirks_bg.wasm -o wasm/pkg/ed25519_quirks_bg.wasm",
     "test-wasm": "wasm-pack test wasm --headless",
     "test": "karma start --single-run",
     "build-web": "npm run clean && webpack --config webpack.config.js --mode=production",
