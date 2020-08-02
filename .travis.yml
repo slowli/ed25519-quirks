@@ -1,5 +1,5 @@
 os: linux
-dist: bionic
+dist: xenial
 addons:
   firefox: latest
   chrome: stable
@@ -18,10 +18,6 @@ cache:
 language: rust
 rust: 1.45.0
 
-env:
-  global:
-    - BINARYEN_VER=version_95
-
 before_install:
   # Install Node
   - nvm install --lts 12 && nvm use 12
@@ -33,13 +29,6 @@ before_install:
   # Install WASM toolchain
   - rustup target add wasm32-unknown-unknown
   - curl https://rustwasm.github.io/wasm-pack/installer/init.sh -sSf | sh -s -- -f
-  - |
-    wget -q "https://github.com/WebAssembly/binaryen/releases/download/$BINARYEN_VER/binaryen-$BINARYEN_VER-x86_64-linux.tar.gz" -O binaryen.tar.gz
-    tar -xf binaryen.tar.gz "binaryen-$BINARYEN_VER/wasm-opt"
-    mkdir -p ~/.local/bin
-    export PATH="$PATH:$HOME/.local/bin"
-    mv "binaryen-$BINARYEN_VER/wasm-opt" ~/.local/bin
-    rm -rf "binaryen-$BINARYEN_VER" binaryen.tar.gz
 
 install:
   - npm ci
