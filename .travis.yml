@@ -1,5 +1,5 @@
 os: linux
-dist: trusty
+dist: bionic
 addons:
   firefox: latest
   chrome: stable
@@ -16,11 +16,11 @@ cache:
     - $HOME/.cargo
 
 language: rust
-rust: 1.41.0
+rust: 1.45.0
 
 env:
   global:
-    - BINARYEN_VER=version_91
+    - BINARYEN_VER=version_95
 
 before_install:
   # Install Node
