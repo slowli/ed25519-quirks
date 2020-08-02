@@ -48,3 +48,6 @@ default = ["wee_alloc"]
 [profile.release]
 lto = true
 opt-level = "s"
+
+[package.metadata.wasm-pack.profile.release]
+wasm-opt = ["-Os", "--enable-mutable-globals"]
