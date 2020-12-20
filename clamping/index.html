@@ -1,0 +1,36 @@
+<!DOCTYPE html><html lang="en" prefix="og:http://ogp.me/ns#"><head><meta charset="utf-8"><meta name="language" content="en"><meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name="author" content="Alex Ostrovski"><meta name="keywords" content="ed25519, cryptography"><meta name="description" content="There are questions that are best left unanswered."><meta name="og:title" content="Why?"><meta name="og:description" content="There are questions that are best left unanswered."><meta name="og:type" content="article"><title>Why? | Ed25519 Quirks</title><link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous"><link rel="stylesheet" href="../base.css"></head><body><header class="body-header"><div class="container"><h1 class="display-3"><a class="d-block" href="..">Ed25519 Quirks</a></h1><nav class="navbar navbar-expand-lg navbar-light px-0 pb-0"><button class="navbar-toggler mb-1" type="button" data-toggle="collapse" data-target="#main-nav-content" aria-controls="main-nav-content" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button><div class="collapse navbar-collapse" id="main-nav-content"><ul class="navbar-nav mr-auto"><li class="nav-item"><a class="nav-link" href="../basics/">Basics</a></li><li class="nav-item"><a class="nav-link" href="../malleability/">Malleability</a></li><li class="nav-item"><a class="nav-link" href="../wildcards/">Wildcards</a></li></ul><ul class="navbar-nav"><li class="nav-item dropdown"><a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Settings</a><div class="dropdown-menu dropdown-menu-right"><h6 class="dropdown-header">Encoding</h6><form class="mx-3 my-1" id="encoding-form"><div class="custom-control custom-radio custom-control-inline"><input class="custom-control-input" id="encoding-hex" type="radio" name="encoding" value="hex"><label class="custom-control-label" for="encoding-hex">Hex</label></div><div class="custom-control custom-radio custom-control-inline"><input class="custom-control-input" id="encoding-base64" type="radio" name="encoding" value="base64"><label class="custom-control-label" for="encoding-base64">Base64</label></div></form></div></li></ul></div></nav></div></header><div class="container pt-4"><p class="lead">Why is the scalar component of the secret key in Ed25519 clamped as specified?</p><p>’Cause security, obviously.</p><blockquote class="blockquote"><img class="img-fluid" src="https://tfw.ostrov.ski" alt="tfw you understand Ed25519 key clamping" title="It’s that easy"></blockquote><p>For realsies, tho: clamping breaks the linear relation between secret and public keys, so stuff like
+<a href="https://github.com/bitcoin/bips/blob/master/bip-0032.mediawiki">hierarchical key derivation</a>
+or plain outsourced vanity address grinding becomes difficult compared to cryptosystems
+with such a relationship (e.g., the secp256k1 elliptic curve with either ECDSA or Schnorr).
+In some cases, the damage is irreparable: as clamping leaves space for just <code>2<sup>251</sup></code>
+secret scalars as opposed to <code>ℓ = 2<sup>252</sup> + …</code> possibilities, arithmetic on public keys
+that would map to secret keys is impossible. It is relatively easy to get rid of restrictions by not clamping
+secret scalars, but there must be <em>some</em> reasons they’re clamped, right?
+</p><p>For real realsies, setting one of higher bits to one <em>sort of</em> makes sense;
+<a href="https://moderncrypto.org/mail-archive/curves/2017/000860.html">it enables to not allow
+for the zero scalar</a> during signature generation.
+Setting lower 3 bits to zero
+<a href="https://moderncrypto.org/mail-archive/curves/2017/000861.html">might protect</a>
+against extracting the secret key by solving
+a fitting <a href="http://www.isg.rhul.ac.uk/~sdg/igor-slides.pdf">hidden number problem</a>
+(which were shown to be an effective attack vector for other cryptosystems, e.g., ECDSA).
+</p><p class="small">Alternatively, setting lower bits supposedly protects against
+<a href="https://crypto.stackexchange.com/questions/55632/libsodium-x25519-and-ed25519-small-order-check/55643#55643">small-subgroup
+attacks</a>, but relevance of these attacks to signing is a conundrum on its own
+(originally, small-subgroup attacks apply to key exchange).</p><footer class="page-footer small text-muted"><span class="copyright">© 2019 Alex Ostrovski. Licensed under
+<a rel="license" href="https://www.apache.org/licenses/LICENSE-2.0">Apache 2.0</a>.</span><div class="float-none float-sm-right"><a href="../about/">About</a>&nbsp;•
+<a href="https://github.com/slowli/ed25519-quirks">GitHub</a></div></footer></div><script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script><script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script><script>$(function() {
+  var encoding = localStorage.getItem('encoding') || '';
+  if (['hex', 'base64'].indexOf(encoding) < 0) {
+    encoding = 'base64';
+    localStorage.setItem('encoding', encoding);
+  }
+
+  $('input[name=encoding]').each(function(el) {
+    var $this = $(this);
+    $this.prop('checked', $this.val() === encoding);
+  }).change(function() {
+    localStorage.setItem('encoding', $('input[name=encoding]:checked').val());
+  });
+});
+</script></body></html>

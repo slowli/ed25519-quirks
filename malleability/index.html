@@ -1,0 +1,56 @@
+<!DOCTYPE html><html lang="en" prefix="og:http://ogp.me/ns#"><head><meta charset="utf-8"><meta name="language" content="en"><meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name="author" content="Alex Ostrovski"><meta name="keywords" content="ed25519, cryptography"><meta name="description" content="Now, the fun part begins: attempting to break Ed25519 in various ways. Our first approach is malleability, the ability to create digital signatures without the knowledge of the necessary secret key."><meta name="og:title" content="Malleable signatures"><meta name="og:description" content="Now, the fun part begins: attempting to break Ed25519 in various ways. Our first approach is malleability, the ability to create digital signatures without the knowledge of the necessary secret key."><meta name="og:type" content="article"><title>Malleable signatures | Ed25519 Quirks</title><link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous"><link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.1/css/solid.css" integrity="sha384-aj0h5DVQ8jfwc8DA7JiM+Dysv7z+qYrFYZR+Qd/TwnmpDI6UaB3GJRRTdY8jYGS4" crossorigin="anonymous"><link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.1/css/regular.css" integrity="sha384-l+NpTtA08hNNeMp0aMBg/cqPh507w3OvQSRoGnHcVoDCS9OtgxqgR7u8mLQv8poF" crossorigin="anonymous"><link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.1/css/fontawesome.css" integrity="sha384-WK8BzK0mpgOdhCxq86nInFqSWLzR5UAsNg0MGX9aDaIIrFWQ38dGdhwnNCAoXFxL" crossorigin="anonymous"><link rel="stylesheet" href="../base.css"></head><body><header class="body-header"><div class="container"><h1 class="display-3"><a class="d-block" href="..">Ed25519 Quirks</a></h1><nav class="navbar navbar-expand-lg navbar-light px-0 pb-0"><button class="navbar-toggler mb-1" type="button" data-toggle="collapse" data-target="#main-nav-content" aria-controls="main-nav-content" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button><div class="collapse navbar-collapse" id="main-nav-content"><ul class="navbar-nav mr-auto"><li class="nav-item"><a class="nav-link" href="../basics/">Basics</a></li><li class="nav-item active"><a class="nav-link" href="../malleability/">Malleability</a></li><li class="nav-item"><a class="nav-link" href="../wildcards/">Wildcards</a></li></ul><ul class="navbar-nav"><li class="nav-item dropdown"><a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Settings</a><div class="dropdown-menu dropdown-menu-right"><h6 class="dropdown-header">Encoding</h6><form class="mx-3 my-1" id="encoding-form"><div class="custom-control custom-radio custom-control-inline"><input class="custom-control-input" id="encoding-hex" type="radio" name="encoding" value="hex"><label class="custom-control-label" for="encoding-hex">Hex</label></div><div class="custom-control custom-radio custom-control-inline"><input class="custom-control-input" id="encoding-base64" type="radio" name="encoding" value="base64"><label class="custom-control-label" for="encoding-base64">Base64</label></div></form></div></li></ul></div></nav></div></header><div class="container pt-4"><p class="lead">Now, the fun part begins: attempting to break Ed25519 in various ways. Our first approach is
+<a href="https://en.wikipedia.org/wiki/Malleability_(cryptography)">malleability</a>, the ability to create
+digital signatures without the knowledge of the necessary secret key.
+</p><p>Contrary to a threatening definition, malleability doesn’t break a digital signature scheme. It allows to create
+new digital signatures for messages <em>already</em> signed by the legitimate message signers, rather than for
+new messages (which would indeed break signature scheme security).
+In application to Ed25519, the malleability attack is as follows: given a valid signature <code>(R, s)</code>
+under the message <code>M</code> and the public key <code>A</code>, produce another signature
+<code>(R′, s′) != (R, s)</code>
+such that it would verify for <code>M</code> and <code>A</code>.
+</p><p>Although malleability is not a problem for signing, things can get ugly if a system
+accepting digitally signed messages assumes that every signature
+is created by the owner of a respective secret key. For example, the system may identify messages by their
+cryptographic hash computed from the message together with the signature (as it was the case with Bitcoin
+before <a href="https://github.com/bitcoin/bips/blob/master/bip-0141.mediawiki">SegWit</a>). In this case,
+the same message signed by two different signatures will have
+different hashes and thus will be treated as two separate entities! This was a significant obstacle for
+implementing chained payments, e.g., for <a href="https://lightning.network/">Lightning Network</a>,
+in Bitcoin pre-SegWit.
+</p><h3>Mutating Signature Scalar</h3><p>Some Ed25519 implementations verify that signature scalar <code>s &lt; 2<sup>253</sup></code>,
+rather than comparing it to the subgroup order <code>ℓ</code>. The problem is,
+for most valid scalars <code>s</code>,
+<code>s + ℓ &lt; 2<sup>253</sup></code> as well; thus, <code>(R, s + ℓ)</code> is considered a valid signature.
+Since <code>2ℓ > 2<sup>253</sup></code>, using <code>s + 2ℓ</code>, <code>s + 3ℓ</code>, etc.
+as a scalar component of the signature will always fail.
+</p><div id="app"><div class="loading-progress card my-2 small"><div class="card-body"><h6 class="card-title">Loading interactive parts…</h6><p class="card-text">This may take some time. <i class="text-muted fas fa-spinner fa-spin"></i></p></div></div><div slot="randomness"><p class="mt-3">You can plug the message, public key and the new signature into
+<a target="_blank" href="../basics/#verification">verification form</a>
+or <a target="_blank" href="https://tweetnacl.js.org/#/sign">an external website</a> and check
+that the new signature is actually valid.
+</p><h3>Fiddling with Randomness</h3><p>It is impossible for an external party to mutate the <code>R</code> part of a signature, as it is included
+both into the hash scalar and in free form. The <em>owner</em> of the secret key can, however, trivially
+create as many signatures for the same content as he wishes. Indeed, it’s impossible to tell during
+signature verification if the point <code>R = [r]B</code>
+was created properly; rather than producing the scalar <code>r</code> from the secret key and
+the message, it can be set to any possible scalar.
+</p></div><div class="loading-progress card my-2 small"><div class="card-body"><h6 class="card-title">Loading interactive parts…</h6><p class="card-text">This may take some time. <i class="text-muted fas fa-spinner fa-spin"></i></p></div></div><div slot="afterRandomness"><p class="mt-3">If you search for a cryptographic primitive that provides
+a “unique” analogue of digital signatures, it does exist and is called
+<a href="https://en.wikipedia.org/wiki/Verifiable_random_function"><em>verifiable random function</em></a> (VRF);
+there is <a href="https://signal.org/docs/specifications/xeddsa/#vxeddsa">a VRF implementation
+based on Curve25519</a> as well.</p></div></div><div class="row mt-4"><div class="col-md-5 mb-1 mb-md-0"><a href="../basics/"><span class="text-muted">←</span>Creating and verifying signatures</a></div><div class="col-md-5 ml-auto text-md-right"><a href="../wildcards/">Wildcard signatures<span class="text-muted">→</span></a></div></div><footer class="page-footer small text-muted"><span class="copyright">© 2019 Alex Ostrovski. Licensed under
+<a rel="license" href="https://www.apache.org/licenses/LICENSE-2.0">Apache 2.0</a>.</span><div class="float-none float-sm-right"><a href="../about/">About</a>&nbsp;•
+<a href="https://github.com/slowli/ed25519-quirks">GitHub</a></div></footer></div><script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script><script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script><script>$(function() {
+  var encoding = localStorage.getItem('encoding') || '';
+  if (['hex', 'base64'].indexOf(encoding) < 0) {
+    encoding = 'base64';
+    localStorage.setItem('encoding', encoding);
+  }
+
+  $('input[name=encoding]').each(function(el) {
+    var $this = $(this);
+    $this.prop('checked', $this.val() === encoding);
+  }).change(function() {
+    localStorage.setItem('encoding', $('input[name=encoding]:checked').val());
+  });
+});
+</script><script src="../malleability.js"></script></body></html>
