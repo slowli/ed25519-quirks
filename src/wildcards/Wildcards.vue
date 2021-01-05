@@ -141,7 +141,7 @@ export default {
 
     moreMessages() {
       const messages = this.signature.generateValidMessages(this.publicKey, 3);
-      messages.forEach(message => this.messages.push(message));
+      messages.forEach((message) => this.messages.push(message));
     },
   },
 };

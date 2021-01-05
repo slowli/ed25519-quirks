@@ -9,6 +9,7 @@
   ],
   "rules": {
     "max-len": ["error", 120],
+    "max-classes-per-file": "off",
 
     "vue/max-attributes-per-line": ["error", {
       "singleline": 2,
@@ -29,6 +30,6 @@
       }
     }],
 
-    "object-curly-spacing" : [2, "always"]
+    "object-curly-spacing" : ["error", "always"]
   }
 }

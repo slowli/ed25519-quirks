@@ -21,15 +21,6 @@
     </div>
   </div>
 </template>
-<style>
-  .wrapped {
-    word-break: break-all;
-  }
-
-  a.clipboard:hover {
-    color: #545b62;
-  }
-</style>
 <script>
 export default {
   name: 'DataRow',
@@ -40,3 +31,12 @@ export default {
   },
 };
 </script>
+<style>
+  .wrapped {
+    word-break: break-all;
+  }
+
+  a.clipboard:hover {
+    color: #545b62;
+  }
+</style>

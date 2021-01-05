@@ -31,7 +31,7 @@ describe('Seed.vue', () => {
 
   it('should display seed in base64 encoding', () => {
     const seed = createSeed();
-    const len = Math.ceil(32 * 8 / 6) + 1;
+    const len = Math.ceil((32 * 8) / 6) + 1;
     expect(seed.find('input[type=text]').element.value).to.have.lengthOf(len);
   });
 

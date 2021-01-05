@@ -19,6 +19,10 @@ module.exports = {
     filename: '[name].js',
     chunkFilename: '[name].[chunkhash:8].js'
   },
+  experiments: {
+    // TODO: use `asyncWebAssembly` instead
+    syncWebAssembly: true
+  },
   optimization: {
     splitChunks: {
       chunks: 'async', // 'all' doesn't work for some reason
@@ -48,28 +52,29 @@ module.exports = {
     ]
   },
   plugins: [
-    new CopyWebpackPlugin([
-      { from: './templates/base.css', to: 'base.css' },
-      {
-        from: './templates/*.pug',
-        ignore: ['_*.pug'],
-        to: '[name]/index.html',
-        toType: 'template',
+    new CopyWebpackPlugin({
+      patterns: [
+        { from: './templates/base.css', to: 'base.css' },
+        {
+          from: './templates/*.pug',
+          globOptions: { ignore: ['**/_*.pug'] },
 
-        transformPath(targetPath) {
-          const isIndex = targetPath.startsWith('index/index') ||
-            targetPath.startsWith('index\\index');
-          return isIndex ? 'index.html' : targetPath;
-        },
+          to({ absoluteFilename }) {
+            const isIndex = absoluteFilename.endsWith('index.pug');
+            return isIndex ? 'index.html' : '[name]/index.html';
+          },
 
-        transform(content, path) {
-          const render = pug.compile(content, {
-            filename: path
-          });
-          return render({ $pages: pages });
+          toType: 'template',
+
+          transform(content, path) {
+            const render = pug.compile(content, {
+              filename: path
+            });
+            return render({ $pages: pages });
+          }
         }
-      }
-    ]),
+      ]
+    }),
 
     new VueLoaderPlugin(),
 
