@@ -23,6 +23,18 @@ html(lang='en', prefix="og:http://ogp.me/ns#")
     meta(name='og:description', content=page.description)
     meta(name='og:type', content='article')
 
+    script(type='application/ld+json').
+      {
+        "@context": "https://schema.org/",
+        "@type": "#{(entryPoint === '') ? 'WebSite' : 'WebPage'}",
+        "author": {
+          "@type": "Person",
+          "name": "Alex Ostrovski"
+        },
+        "headline": "#{page.title}",
+        "description": "#{page.description}"
+      }
+
     title #{page.title} | Ed25519 Quirks
 
     //- External dependencies
