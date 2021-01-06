@@ -1,0 +1,34 @@
+[build]
+publish = "dist/"
+command = "bash ./build.sh"
+
+# Set up redirects from all aux domains to the canonical one.
+[[redirects]]
+from = "https://ed25519.wtf/*"
+to = "https://quirks.ed25519.info/:splat"
+status = 301
+force = true
+
+[[redirects]]
+from = "https://ed25519-quirks.info/*"
+to = "https://quirks.ed25519.info/:splat"
+status = 301
+force = true
+
+[[redirects]]
+from = "https://ed25519quirks.info/*"
+to = "https://quirks.ed25519.info/:splat"
+status = 301
+force = true
+
+[[redirects]]
+from = "https://ed25519-quirks.com/*"
+to = "https://quirks.ed25519.info/:splat"
+status = 301
+force = true
+
+[[redirects]]
+from = "https://ed25519quirks.com/*"
+to = "https://quirks.ed25519.info/:splat"
+status = 301
+force = true
