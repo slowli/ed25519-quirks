@@ -5,7 +5,7 @@ import {
 PublicKeyIter.prototype[Symbol.iterator] = function iter() { return this; };
 const SMALL_SUBGROUP = [...PublicKey.smallSubgroup()];
 
-export default function (Vue) {
+export default (Vue) => {
   // eslint-disable-next-line no-param-reassign
   Vue.prototype.$crypto = {
     Keypair,
@@ -14,4 +14,4 @@ export default function (Vue) {
     Signature,
     SMALL_SUBGROUP,
   };
-}
+};

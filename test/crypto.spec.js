@@ -38,7 +38,7 @@ describe('crypto', () => {
 
     it('should contain different elements', () => {
       const uniqueKeys = new Set(SMALL_SUBGROUP.map(
-        key => Buffer.from(key.bytes()).toString('base64'),
+        (key) => Buffer.from(key.bytes()).toString('base64'),
       ));
       expect(uniqueKeys).to.have.lengthOf(8);
     });
@@ -71,7 +71,10 @@ describe('crypto', () => {
           let s = Signature.fromRandomScalar();
           !key.verify(message, s.bytes());
           s = Signature.fromRandomScalar(), counter += 1
-        ) { /* Intentionally empty */ }
+        ) {
+          // Intentionally empty
+        }
+
         expect(counter).to.be.lessThan(1000);
       });
 
