@@ -512,9 +512,9 @@ impl ModifiedScalar {
         };
 
         ModifiedScalar {
-            signature,
             valid,
             bytes,
+            signature,
         }
     }
 }
