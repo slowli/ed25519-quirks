@@ -1,0 +1,52 @@
+name: Node.js CI
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Cache cargo build
+        uses: actions/cache@v1
+        with:
+          path: wasm/target
+          key: ${{ runner.os }}-cargo-build-target
+
+      - name: Install Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: 14.x
+      - name: Install Rust
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          override: true
+          components: rustfmt, clippy
+      - name: Install wasm-pack
+        uses: jetli/wasm-pack-action@v0.3.0
+        with:
+          version: 'latest'
+
+      - run: npm ci
+
+      # Rust-related checks
+      - name: Format
+        run: npm run lint-wasm:fmt
+      - name: Clippy
+        uses: actions-rs/clippy-check@v1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          args: --manifest-path wasm/Cargo.toml --all --tests -- -D warnings
+      - run: npm run test-wasm -- --chrome --firefox
+
+      # Front-end checks (`npm run build` should be the first one, it builds WASM)
+      - run: npm run build-opt
+      - run: npm run lint-web
+      - run: npm test
