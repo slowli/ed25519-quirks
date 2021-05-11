@@ -48,7 +48,7 @@
     <div v-html="htmlFragments.signing"></div>
 
     <form class="mb-3" @submit.prevent="">
-      <div class="form-row">
+      <div class="row">
         <label for="message" class="col-md-3 col-lg-2 col-form-label">Message <code>M</code></label>
         <div class="col-md-9 col-lg-10">
           <input
@@ -90,7 +90,7 @@
     <div v-html="htmlFragments.verification"></div>
 
     <form @submit.prevent="">
-      <div class="form-row mb-2">
+      <div class="row mb-2">
         <label for="signed-message" class="col-md-3 col-lg-2 col-form-label">Message <code>M</code></label>
         <div class="col-md-9 col-lg-10">
           <input
@@ -102,9 +102,9 @@
           >
         </div>
       </div>
-      <div class="form-row mb-2">
+      <div class="row mb-2">
         <label for="signer" class="col-md-3 col-lg-2 col-form-label">Public key <code>A</code></label>
-        <div class="col-md-9 col-lg-10 input-group">
+        <div class="col-md-9 col-lg-10">
           <input
             id="signer"
             v-model="signer"
@@ -122,9 +122,9 @@
           </div>
         </div>
       </div>
-      <div class="form-row mb-3">
+      <div class="row mb-3">
         <label for="signature" class="col-md-3 col-lg-2 col-form-label">Signature <code>(R, s)</code></label>
-        <div class="col-md-9 col-lg-10 input-group">
+        <div class="col-md-9 col-lg-10">
           <textarea
             id="signature"
             v-model="verifySignature"
@@ -153,7 +153,9 @@
         :data="repr(verification.computedPoint)"
         wrapper="R′ = [s]B - [h]A = Pt(&quot;$&quot;)"
       >
-        <Status slot="key" :status="verification.success ? 'ok' : 'fail'" />
+        <template v-slot:key>
+          <Status :status="verification.success ? 'ok' : 'fail'" />
+        </template>
         To verify whether signature is valid, it’s enough to compare <code>R′</code>
         to first 32 bytes of the signature (i.e., <code>R</code>).
       </DataRow>
@@ -238,7 +240,7 @@ export default {
   },
 
   mounted() {
-    $('#verification a').show().click((event) => {
+    $('#verification button').show().click((event) => {
       event.preventDefault();
       this.copyFromSigning();
     });

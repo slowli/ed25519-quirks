@@ -1,27 +1,29 @@
 <template>
   <div>
     <form @submit.prevent="">
-      <div class="form-group form-row">
+      <div class="form-group row mb-1">
         <label class="col-md-3 col-lg-2 col-form-label pt-0">Torsion point</label>
         <div class="col-md-9 col-lg-10">
           <div
             v-for="i in [0, 1, 2, 3, 4, 5, 6, 7]"
             :key="i"
-            class="custom-control custom-radio custom-control-inline"
+            class="form-check form-check-inline"
           >
             <input
               :id="'torsion-index-' + i"
               v-model="torsionIndex"
               type="radio"
               name="torsion-index"
-              class="custom-control-input"
+              class="form-check-input"
               :value="i"
             >
-            <label class="custom-control-label" :for="'torsion-index-' + i">
+            <label class="form-check-label" :for="'torsion-index-' + i">
               <code v-if="i === 0">O</code><code v-else>E<sub>{{ i }}</sub></code>
             </label>
           </div>
         </div>
+      </div>
+      <div class="row mb-3">
         <label class="col-md-3 col-lg-2 col-form-label" for="user-message">
           Feeling lucky?
           <Status :status="publicKey.verify($Buffer.from(message, 'utf8'), signature.bytes()) ? 'ok' : 'fail'" />
@@ -47,13 +49,14 @@
       wrapper="A = Pt(&quot;$&quot;)"
     />
     <DataRow name="Signature" :data="repr(signature.bytes())">
-      <a
-        slot="key"
-        href="#"
-        role="button"
-        title="Generate a new signature"
-        @click.prevent="updateSignature()"
-      ><i class="fas fa-dice"></i></a>
+      <template v-slot:key>
+        <a
+          href="#"
+          role="button"
+          title="Generate a new signature"
+          @click.prevent="updateSignature()"
+        ><i class="fas fa-dice"></i></a>
+      </template>
     </DataRow>
     <DataRow
       v-for="(sampleMessage, index) in messages"
@@ -62,12 +65,14 @@
       :data="sampleMessage"
       wrapper="$"
     />
-    <div class="row my-2 justify-content-center">
-      <button
-        type="button"
-        class="btn btn-primary btn-sm"
-        @click="moreMessages()"
-      >Some more messages</button>
+    <div class="row mt-3 justify-content-center">
+      <div class="col-auto">
+        <button
+          type="button"
+          class="btn btn-primary btn-sm"
+          @click="moreMessages()"
+        >Some more messages</button>
+      </div>
     </div>
   </div>
 </template>

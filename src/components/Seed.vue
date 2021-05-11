@@ -1,16 +1,15 @@
 <template>
-  <div class="form-row mb-2">
-    <div class="col-md-3 col-lg-2 col-form-label">
-      <label for="seed">Seed</label>
+  <div class="row mb-2">
+    <label class="col-md-3 col-lg-2 col-form-label" for="seed">Seed
       <a
         href="#"
         role="button"
         title="Generate a new random seed"
         @click.prevent="generateKeypair()"
       ><i class="fas fa-dice"></i></a>
-    </div>
+    </label>
 
-    <div class="col-md-9 col-lg-10 input-group">
+    <div class="col-md-9 col-lg-10">
       <input
         id="seed"
         type="text"

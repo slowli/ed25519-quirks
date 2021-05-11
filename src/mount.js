@@ -36,9 +36,10 @@ export default async function mount(rootComponent) {
   const { Buffer } = await import(/* webpackChunkName: "bundle" */ 'buffer');
   app.config.globalProperties.$Buffer = Buffer;
   app.config.globalProperties.$copy = copy;
-  app.mount('#app');
+  const mountedApp = app.mount('#app');
 
   $('input[name=encoding]').change(() => {
-    app.encoding = $('input[name=encoding]:checked').val();
+    console.log(mountedApp.encoding);
+    mountedApp.encoding = $('input[name=encoding]:checked').val();
   });
 }

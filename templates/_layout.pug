@@ -27,7 +27,7 @@ block body
           span.navbar-toggler-icon
 
         div#main-nav-content.collapse.navbar-collapse
-          ul.navbar-nav.mr-auto
+          ul.navbar-nav.me-auto
             li.nav-item(class={ active: entryPoint === 'basics' })
               a.nav-link(href=`${basePath}/basics/`) Basics
             li.nav-item(class={ active: entryPoint === 'malleability' })
@@ -36,30 +36,29 @@ block body
               a.nav-link(href=`${basePath}/wildcards/`) Wildcards
           ul.navbar-nav
             li.nav-item.dropdown
-              a.nav-link.dropdown-toggle(
+              a#nav-settings.nav-link.dropdown-toggle(
                 href='#'
                 role="button"
-                data-toggle="dropdown"
-                aria-haspopup="true"
+                data-bs-toggle="dropdown"
                 aria-expanded="false"
               ) Settings
-              .dropdown-menu.dropdown-menu-right
+              .dropdown-menu.dropdown-menu-end(aria-labelledby="nav-settings")
                 h6.dropdown-header Encoding
                 form#encoding-form.mx-3.my-1
-                  .custom-control.custom-radio.custom-control-inline
-                    input#encoding-hex.custom-control-input(
+                  .form-check.form-check-inline
+                    input#encoding-hex.form-check-input(
                       type="radio"
                       name="encoding"
                       value="hex"
                     )
-                    label.custom-control-label(for='encoding-hex') Hex
-                  .custom-control.custom-radio.custom-control-inline
-                    input#encoding-base64.custom-control-input(
+                    label.form-check-label(for='encoding-hex') Hex
+                  .form-check.form-check-inline
+                    input#encoding-base64.form-check-input(
                       type="radio"
                       name="encoding"
                       value="base64"
                     )
-                    label.custom-control-label(for='encoding-base64') Base64
+                    label.form-check-label(for='encoding-base64') Base64
   .container.pt-4
     block main
     if page.prev || page.next
@@ -71,17 +70,17 @@ block body
               span.text-muted ←
               | #{pages[page.prev].title}
         if page.next
-          .col-md-5.ml-auto.text-md-right
+          .col-md-5.ms-auto.text-md-end
             a(href=`${basePath}/${page.next}/`)
               | #{pages[page.next].title}
               span.text-muted →
     footer.page-footer.small.text-muted
       span.copyright
-        | © 2019 Alex Ostrovski. Licensed under
+        | © 2021 Alex Ostrovski. Licensed under
         |
         a(rel='license', href='https://www.apache.org/licenses/LICENSE-2.0') Apache 2.0
         | .
-      .float-none.float-sm-right
+      .float-none.float-sm-end
         a(href=`${basePath}/about/`) About
         | &nbsp;•
         |
