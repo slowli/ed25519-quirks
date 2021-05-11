@@ -47,6 +47,6 @@ jobs:
       - run: npm run test-wasm -- --chrome --firefox
 
       # Front-end checks (`npm run build` should be the first one, it builds WASM)
-      - run: npm run build-opt
+      - run: npm run build
       - run: npm run lint-web
       - run: npm test

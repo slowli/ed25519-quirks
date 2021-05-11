@@ -15,7 +15,6 @@
     "test": "karma start --single-run",
     "build-web": "npm run clean && webpack --config webpack.config.js --mode=production",
     "build": "npm run build-wasm && npm run build-web",
-    "build-opt": "npm run build-wasm && npm run build-web",
     "start": "webpack serve --mode=development"
   },
   "author": "Alex Ostrovski <ostrovski.alex@gmail.com>",

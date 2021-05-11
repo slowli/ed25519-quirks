@@ -14,4 +14,4 @@ curl https://rustwasm.github.io/wasm-pack/installer/init.sh -sSf | sh -s -- -f
 rustup override set $RUST_VERSION
 
 # Build!
-PATH="$PATH:$HOME/.local/bin" BINARYEN_CORES=1 npm run build-opt
+PATH="$PATH:$HOME/.local/bin" BINARYEN_CORES=1 npm run build
