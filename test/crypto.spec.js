@@ -13,15 +13,10 @@ const SMALL_SUBGROUP = [];
 
 describe('crypto', () => {
   before(async () => {
-    const { default: crypto } = await import(/* webpackPrefetch: true */ '../src/crypto');
-
-    class Mock extends Object {}
-    crypto(Mock);
-
     let group;
     ({
       Keypair, PublicKey, Signature, SMALL_SUBGROUP: group,
-    } = new Mock().$crypto);
+    } = await import(/* webpackPrefetch: true */ '../src/crypto'));
     SMALL_SUBGROUP.push(...group);
   });
 

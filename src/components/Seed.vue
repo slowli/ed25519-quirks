@@ -35,7 +35,7 @@ export default {
   data() {
     const keypair = new this.$crypto.Keypair();
     return {
-      value: keypair,
+      modelValue: keypair,
       seed: this.$Buffer.from(keypair.seed()).toString(this.encoding),
       seedError: false,
     };
@@ -50,16 +50,16 @@ export default {
   watch: {
     encoding() {
       if (!this.seedError) {
-        this.seed = this.$Buffer.from(this.value.seed()).toString(this.encoding);
+        this.seed = this.$Buffer.from(this.modelValue.seed()).toString(this.encoding);
       }
     },
   },
 
   methods: {
     generateKeypair() {
-      this.value = new this.$crypto.Keypair();
-      this.seed = this.repr(this.value.seed());
-      this.$emit('input', this.value);
+      this.modelValue = new this.$crypto.Keypair();
+      this.seed = this.repr(this.modelValue.seed());
+      this.$emit('update:modelValue', this.modelValue);
     },
 
     updateSeed(input) {
@@ -68,8 +68,8 @@ export default {
 
       try {
         const buffer = this.$Buffer.from(input, this.encoding);
-        this.value = this.$crypto.Keypair.fromSeed(buffer);
-        this.$emit('input', this.value);
+        this.modelValue = this.$crypto.Keypair.fromSeed(buffer);
+        this.$emit('update:modelValue', this.modelValue);
       } catch (e) {
         this.seedError = true;
       }
