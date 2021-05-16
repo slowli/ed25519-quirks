@@ -1,8 +1,9 @@
 extends _base
 
 mixin equation
-  p.px-2.py-1.bg-light.equation.text-monospace
-    block
+  .equation.mb-3
+    code
+      block
 
 mixin loading
   .loading-progress.card.my-2.small
@@ -13,13 +14,13 @@ mixin loading
 block body
   header.body-header
     div.container
-      h1.display-3
+      h1.display-3.mb-4
         a.d-block(href = basePath) Ed25519 Quirks
       nav.navbar.navbar-expand-lg.navbar-light.px-0.pb-0
         button.navbar-toggler.mb-1(
           type="button"
-          data-toggle="collapse"
-          data-target="#main-nav-content"
+          data-bs-toggle="collapse"
+          data-bs-target="#main-nav-content"
           aria-controls="main-nav-content"
           aria-expanded="false"
           aria-label="Toggle navigation"
@@ -62,18 +63,18 @@ block body
   .container.pt-4
     block main
     if page.prev || page.next
-      .row.mt-4
+      nav.page-nav.row.mt-4
         if page.prev !== undefined
           .col-md-5.mb-1.mb-md-0
             //- We need to consider a special case when the previous page has empty URL.
             a(href = (page.prev === '') ? basePath : `${basePath}/${page.prev}/`)
-              span.text-muted ←
+              span.text-muted.me-1 ←
               | #{pages[page.prev].title}
         if page.next
           .col-md-5.ms-auto.text-md-end
             a(href=`${basePath}/${page.next}/`)
               | #{pages[page.next].title}
-              span.text-muted →
+              span.text-muted.ms-1 →
     footer.page-footer.small.text-muted
       span.copyright
         | © 2021 Alex Ostrovski. Licensed under

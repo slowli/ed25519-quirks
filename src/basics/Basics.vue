@@ -153,7 +153,7 @@
         :data="repr(verification.computedPoint)"
         wrapper="R′ = [s]B - [h]A = Pt(&quot;$&quot;)"
       >
-        <template v-slot:key>
+        <template #key>
           <Status :status="verification.success ? 'ok' : 'fail'" />
         </template>
         To verify whether signature is valid, it’s enough to compare <code>R′</code>
@@ -186,8 +186,8 @@ export default {
       keypair,
       message,
       signedMessage: message,
-      signer: this.$Buffer.from(keypair.publicKey().bytes()).toString(this.encoding),
-      verifySignature: this.$Buffer.from(signature).toString(this.encoding),
+      signer: this.repr(keypair.publicKey().bytes()),
+      verifySignature: this.repr(signature),
     };
   },
 
@@ -199,23 +199,24 @@ export default {
 
     verification() {
       const binaryMessage = this.$Buffer.from(this.signedMessage, 'utf8');
-      let publicKey; let signature; let
-        verification;
+      let verification;
       let signerParseError = false;
       let signatureParseError = false;
+      let signerKey = null;
+      let verifySignatureBytes = null;
 
       try {
         const buffer = this.$Buffer.from(this.signer, this.encoding);
-        publicKey = this.$crypto.PublicKey.parse(buffer);
+        signerKey = this.$crypto.PublicKey.parse(buffer);
       } catch (e) {
         signerParseError = true;
       }
 
       try {
-        signature = this.$Buffer.from(this.verifySignature, this.encoding);
-        if (!signerParseError) {
+        verifySignatureBytes = this.$Buffer.from(this.verifySignature, this.encoding);
+        if (signerKey != null) {
           // An error might occur here if the scalar has set upper bits.
-          verification = publicKey.verification(binaryMessage, signature);
+          verification = signerKey.verification(binaryMessage, verifySignatureBytes);
         }
       } catch (e) {
         signatureParseError = true;
@@ -236,6 +237,24 @@ export default {
         computedPoint: verification.computedPoint(),
         success: verification.success(),
       };
+    },
+  },
+
+  watch: {
+    encoding(_, oldEncoding) {
+      try {
+        const parsedSigner = this.$Buffer.from(this.signer, oldEncoding);
+        this.signer = this.repr(parsedSigner);
+      } catch (e) {
+        // Nothing we can do, unfortunately.
+      }
+
+      try {
+        const parsedSignature = this.$Buffer.from(this.verifySignature, oldEncoding);
+        this.verifySignature = this.repr(parsedSignature);
+      } catch (e) {
+        // Nothing we can do, unfortunately.
+      }
     },
   },
 

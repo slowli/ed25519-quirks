@@ -73,9 +73,9 @@ describe('Seed.vue', () => {
     const seeds = new Set();
     for (let i = 0; i < 5; i += 1) {
       seeds.add(seed.find('input[type=text]').element.value);
-      await seed.find('a[role=button]').trigger('click');
-
       // We have a single `seed` component; i.e., loop iterations are not independent.
+      // eslint-disable-next-line no-await-in-loop
+      await seed.find('a[role=button]').trigger('click');
       // eslint-disable-next-line no-await-in-loop
       await seed.vm.$nextTick();
     }

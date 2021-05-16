@@ -1,7 +1,7 @@
 <template>
   <div>
     <form @submit.prevent="">
-      <div class="form-group row mb-1">
+      <div class="form-group row mb-2">
         <label class="col-md-3 col-lg-2 col-form-label pt-0">Torsion point</label>
         <div class="col-md-9 col-lg-10">
           <div
@@ -49,7 +49,7 @@
       wrapper="A = Pt(&quot;$&quot;)"
     />
     <DataRow name="Signature" :data="repr(signature.bytes())">
-      <template v-slot:key>
+      <template #key>
         <a
           href="#"
           role="button"

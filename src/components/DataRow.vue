@@ -1,5 +1,5 @@
 <template>
-  <div class="row mb-1">
+  <div class="row mb-2">
     <div class="col-md-3 col-lg-2 mb-1 mb-md-0 pr-md-2">
       <a
         href="#"
@@ -10,14 +10,16 @@
       ><i class="far fa-copy"></i></a>
       {{ name }} <slot name="key"></slot>
     </div>
-    <div class="col-md-9 col-lg-10 bg-light pb-1">
-      <code
-        class="text-dark d-inline-block p-0"
-        :class="{ wrapped: data.indexOf(' ') < 0 }"
-      >{{ wrapper.replace('$', data) }}</code>
-      <p v-if="$slots.default" class="small text-muted mb-1">
-        <slot></slot>
-      </p>
+    <div class="col-md-9 col-lg-10">
+      <div class="bg-light code-container">
+        <code
+          class="text-dark d-inline-block"
+          :class="{ wrapped: data.indexOf(' ') < 0 }"
+        >{{ wrapper.replace('$', data) }}</code>
+        <p v-if="$slots.default" class="small text-muted mb-1">
+          <slot></slot>
+        </p>
+      </div>
     </div>
   </div>
 </template>

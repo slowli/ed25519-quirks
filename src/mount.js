@@ -21,13 +21,11 @@ export default async function mount(rootComponent) {
 
   const { createApp } = await import(/* webpackChunkName: "bundle" */ 'vue');
   const app = createApp(rootComponent, {
-    encoding: $('input[name=encoding]:checked').val(),
     htmlFragments: getHtmlFragments('#app'),
   });
 
   try {
-    app.config.globalProperties.$crypto =
-      await import(/* webpackChunkName: "bundle" */ './crypto');
+    app.config.globalProperties.$crypto = await import(/* webpackChunkName: "bundle" */ './crypto');
   } catch (error) {
     reportError(error);
   }
@@ -36,10 +34,10 @@ export default async function mount(rootComponent) {
   const { Buffer } = await import(/* webpackChunkName: "bundle" */ 'buffer');
   app.config.globalProperties.$Buffer = Buffer;
   app.config.globalProperties.$copy = copy;
+
   const mountedApp = app.mount('#app');
 
   $('input[name=encoding]').change(() => {
-    console.log(mountedApp.encoding);
     mountedApp.encoding = $('input[name=encoding]:checked').val();
   });
 }

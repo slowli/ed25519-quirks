@@ -37,7 +37,7 @@
       wrapper="s′ = s + ℓ = Sc(&quot;$&quot;)"
     />
     <DataRow name="New signature" :data="repr(modifiedScalar.signature())">
-      <template v-slot:key>
+      <template #key>
         <Status :status="modifiedScalar.valid() ? 'ok' : 'fail'" />
       </template>
     </DataRow>
@@ -62,7 +62,7 @@
       :data="repr(randomizedSignature.randomScalar())"
       wrapper="r = Sc(&quot;$&quot;)"
     >
-      <template v-slot:key>
+      <template #key>
         <a
           href="#"
           role="button"
