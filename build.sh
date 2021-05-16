@@ -1,8 +1,8 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # Build script for one-shot build environments.
 
-RUST_VERSION=1.45.0
+RUST_VERSION=1.52.1
 
 set -ex
 
