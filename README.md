@@ -1,13 +1,13 @@
 # Ed25519 Quirks
 
-[![Build status][travis-image]][travis-url]
+[![Build status][ci-image]][ci-url]
 [![Live website][website-image]][website-url]
 [![License: Apache-2.0][license-image]][license-url] 
 
-[travis-image]: https://img.shields.io/travis/com/slowli/ed25519-quirks.svg
-[travis-url]: https://travis-ci.com/slowli/ed25519-quirks/
+[ci-image]: https://github.com/slowli/ed25519-quirks/actions/workflows/ci.yml/badge.svg
+[ci-url]: https://github.com/slowli/ed25519-quirks/actions/workflows/ci.yml
 [website-image]: https://img.shields.io/badge/website-live-blue.svg
-[website-url]: https://slowli.github.io/ed25519-quirks/
+[website-url]: https://quirks.ed25519.info/
 [license-image]: https://img.shields.io/github/license/slowli/ed25519-quirks.svg
 [license-url]: https://github.com/slowli/ed25519-quirks/blob/master/LICENSE
 
@@ -17,8 +17,8 @@ and Vue.
 ## Running locally
 
 You will need to install a Node / npm toolchain (preferably via a manager like [`nvm`])
-and a Rust toolchain (preferably via [`rustup`]). Both toolchains should be recent; e.g., Node 10-LTS (aka Dubnium)
-and Rust >= 1.37. You should also install [`wasm-pack`].
+and a Rust toolchain (preferably via [`rustup`]). Both toolchains should be recent; e.g., Node 14-LTS
+and Rust 1.45+. You should also install [`wasm-pack`].
 
 To (re)build the WASM file and its JS bindings, execute
 
