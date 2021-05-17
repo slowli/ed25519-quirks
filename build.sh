@@ -1,8 +1,8 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # Build script for one-shot build environments.
 
-RUST_VERSION=1.45.0
+RUST_VERSION=1.52.1
 
 set -ex
 
@@ -14,4 +14,4 @@ curl https://rustwasm.github.io/wasm-pack/installer/init.sh -sSf | sh -s -- -f
 rustup override set $RUST_VERSION
 
 # Build!
-PATH="$PATH:$HOME/.local/bin" BINARYEN_CORES=1 npm run build-opt
+PATH="$PATH:$HOME/.local/bin" BINARYEN_CORES=1 npm run build

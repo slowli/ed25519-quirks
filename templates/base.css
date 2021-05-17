@@ -1,8 +1,5 @@
 code {
   color: #6c7596;
-  padding: .1rem .2rem;
-  border-radius: .25rem;
-  background-color: #f8f9fa;
 }
 
 .body-header {
@@ -32,8 +29,19 @@ code {
 }
 
 .equation {
-  font-size: 87.5%;
-  color: #6c7596;
-  margin-left: -.6rem;
-  border-left: 2px solid;
+  padding: 1rem;
+  border: 1px solid var(--bs-secondary);
+  border-radius: .25rem;
+  border-left-width: .25rem;
+}
+
+.code-container {
+  margin: 0;
+  padding: 0 0.75rem 0.25rem;
+}
+.code-container > code {
+  padding: 0 !important;
+}
+.page-nav a {
+  text-decoration: none;
 }

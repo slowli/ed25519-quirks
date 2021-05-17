@@ -1,0 +1,17 @@
+version: 2
+updates:
+  - package-ecosystem: cargo
+    directory: "/wasm"
+    schedule:
+      interval: daily
+      time: "03:00"
+    open-pull-requests-limit: 10
+    assignees: [ slowli ]
+
+  - package-ecosystem: npm
+    directory: "/"
+    schedule:
+      interval: daily
+      time: "03:00"
+    open-pull-requests-limit: 10
+    assignees: [ slowli ]

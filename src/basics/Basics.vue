@@ -48,7 +48,7 @@
     <div v-html="htmlFragments.signing"></div>
 
     <form class="mb-3" @submit.prevent="">
-      <div class="form-row">
+      <div class="row">
         <label for="message" class="col-md-3 col-lg-2 col-form-label">Message <code>M</code></label>
         <div class="col-md-9 col-lg-10">
           <input
@@ -90,7 +90,7 @@
     <div v-html="htmlFragments.verification"></div>
 
     <form @submit.prevent="">
-      <div class="form-row mb-2">
+      <div class="row mb-2">
         <label for="signed-message" class="col-md-3 col-lg-2 col-form-label">Message <code>M</code></label>
         <div class="col-md-9 col-lg-10">
           <input
@@ -102,9 +102,9 @@
           >
         </div>
       </div>
-      <div class="form-row mb-2">
+      <div class="row mb-2">
         <label for="signer" class="col-md-3 col-lg-2 col-form-label">Public key <code>A</code></label>
-        <div class="col-md-9 col-lg-10 input-group">
+        <div class="col-md-9 col-lg-10">
           <input
             id="signer"
             v-model="signer"
@@ -122,9 +122,9 @@
           </div>
         </div>
       </div>
-      <div class="form-row mb-3">
+      <div class="row mb-3">
         <label for="signature" class="col-md-3 col-lg-2 col-form-label">Signature <code>(R, s)</code></label>
-        <div class="col-md-9 col-lg-10 input-group">
+        <div class="col-md-9 col-lg-10">
           <textarea
             id="signature"
             v-model="verifySignature"
@@ -153,7 +153,9 @@
         :data="repr(verification.computedPoint)"
         wrapper="R′ = [s]B - [h]A = Pt(&quot;$&quot;)"
       >
-        <Status slot="key" :status="verification.success ? 'ok' : 'fail'" />
+        <template #key>
+          <Status :status="verification.success ? 'ok' : 'fail'" />
+        </template>
         To verify whether signature is valid, it’s enough to compare <code>R′</code>
         to first 32 bytes of the signature (i.e., <code>R</code>).
       </DataRow>
@@ -184,8 +186,8 @@ export default {
       keypair,
       message,
       signedMessage: message,
-      signer: this.$Buffer.from(keypair.publicKey().bytes()).toString(this.encoding),
-      verifySignature: this.$Buffer.from(signature).toString(this.encoding),
+      signer: this.repr(keypair.publicKey().bytes()),
+      verifySignature: this.repr(signature),
     };
   },
 
@@ -197,23 +199,24 @@ export default {
 
     verification() {
       const binaryMessage = this.$Buffer.from(this.signedMessage, 'utf8');
-      let publicKey; let signature; let
-        verification;
+      let verification;
       let signerParseError = false;
       let signatureParseError = false;
+      let signerKey = null;
+      let verifySignatureBytes = null;
 
       try {
         const buffer = this.$Buffer.from(this.signer, this.encoding);
-        publicKey = this.$crypto.PublicKey.parse(buffer);
+        signerKey = this.$crypto.PublicKey.parse(buffer);
       } catch (e) {
         signerParseError = true;
       }
 
       try {
-        signature = this.$Buffer.from(this.verifySignature, this.encoding);
-        if (!signerParseError) {
+        verifySignatureBytes = this.$Buffer.from(this.verifySignature, this.encoding);
+        if (signerKey != null) {
           // An error might occur here if the scalar has set upper bits.
-          verification = publicKey.verification(binaryMessage, signature);
+          verification = signerKey.verification(binaryMessage, verifySignatureBytes);
         }
       } catch (e) {
         signatureParseError = true;
@@ -237,8 +240,26 @@ export default {
     },
   },
 
+  watch: {
+    encoding(_, oldEncoding) {
+      try {
+        const parsedSigner = this.$Buffer.from(this.signer, oldEncoding);
+        this.signer = this.repr(parsedSigner);
+      } catch (e) {
+        // Nothing we can do, unfortunately.
+      }
+
+      try {
+        const parsedSignature = this.$Buffer.from(this.verifySignature, oldEncoding);
+        this.verifySignature = this.repr(parsedSignature);
+      } catch (e) {
+        // Nothing we can do, unfortunately.
+      }
+    },
+  },
+
   mounted() {
-    $('#verification a').show().click((event) => {
+    $('#verification button').show().click((event) => {
       event.preventDefault();
       this.copyFromSigning();
     });

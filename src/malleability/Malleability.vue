@@ -3,7 +3,7 @@
   <div>
     <form @submit.prevent="">
       <Seed v-model="keypair" :encoding="encoding" />
-      <div class="form-row mb-3">
+      <div class="row mb-3">
         <label for="message" class="col-md-3 col-lg-2 col-form-label">Message <code>M</code></label>
         <div class="col-md-9 col-lg-10">
           <input
@@ -37,7 +37,9 @@
       wrapper="s′ = s + ℓ = Sc(&quot;$&quot;)"
     />
     <DataRow name="New signature" :data="repr(modifiedScalar.signature())">
-      <Status slot="key" :status="modifiedScalar.valid() ? 'ok' : 'fail'" />
+      <template #key>
+        <Status :status="modifiedScalar.valid() ? 'ok' : 'fail'" />
+      </template>
     </DataRow>
 
     <div v-html="htmlFragments.randomness"></div>
@@ -60,12 +62,13 @@
       :data="repr(randomizedSignature.randomScalar())"
       wrapper="r = Sc(&quot;$&quot;)"
     >
-      <a
-        slot="key"
-        href="#"
-        role="button"
-        @click.prevent="generateScalar()"
-      ><i class="fas fa-dice"></i></a>
+      <template #key>
+        <a
+          href="#"
+          role="button"
+          @click.prevent="generateScalar()"
+        ><i class="fas fa-dice"></i></a>
+      </template>
     </DataRow>
     <DataRow name="New signature" :data="repr(randomizedSignature.bytes())" />
 

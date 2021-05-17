@@ -7,7 +7,7 @@ block pageInit
     pages = $pages;
 
 block main
-  p.lead.
+  p.lead.mb-4.
     As with other digital signature schemes, Ed25519 consists of three protocols: key generation,
     signing and verification. They are similar, but distinct, from the generic Schnorr scheme.
 
@@ -33,7 +33,7 @@ block main
       h3#verification.mt-4
         | Verification
         |
-        a.badge.badge-primary(href='#', role='button', title='Copy from signing', style={ display: 'none' })
+        button.badge.btn.btn-primary(role='button', title='Copy from signing', style={ display: 'none' })
           i.far.fa-clipboard
 
       p Verification uses the equation following from Schnorr and the modified signing procedure:

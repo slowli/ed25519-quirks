@@ -1,7 +1,10 @@
+/* eslint-env jquery */
 export default {
   props: {
-    encoding: { type: String, default: 'base64' },
     htmlFragments: { type: Object, default: {} },
+  },
+  data() {
+    return { encoding: $('input[name=encoding]:checked').val() };
   },
   computed: {
     repr() {

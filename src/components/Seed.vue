@@ -1,16 +1,15 @@
 <template>
-  <div class="form-row mb-2">
-    <div class="col-md-3 col-lg-2 col-form-label">
-      <label for="seed">Seed</label>
+  <div class="row mb-2">
+    <label class="col-md-3 col-lg-2 col-form-label" for="seed">Seed
       <a
         href="#"
         role="button"
         title="Generate a new random seed"
         @click.prevent="generateKeypair()"
       ><i class="fas fa-dice"></i></a>
-    </div>
+    </label>
 
-    <div class="col-md-9 col-lg-10 input-group">
+    <div class="col-md-9 col-lg-10">
       <input
         id="seed"
         type="text"
@@ -35,7 +34,7 @@ export default {
   data() {
     const keypair = new this.$crypto.Keypair();
     return {
-      value: keypair,
+      modelValue: keypair,
       seed: this.$Buffer.from(keypair.seed()).toString(this.encoding),
       seedError: false,
     };
@@ -50,16 +49,16 @@ export default {
   watch: {
     encoding() {
       if (!this.seedError) {
-        this.seed = this.$Buffer.from(this.value.seed()).toString(this.encoding);
+        this.seed = this.$Buffer.from(this.modelValue.seed()).toString(this.encoding);
       }
     },
   },
 
   methods: {
     generateKeypair() {
-      this.value = new this.$crypto.Keypair();
-      this.seed = this.repr(this.value.seed());
-      this.$emit('input', this.value);
+      this.modelValue = new this.$crypto.Keypair();
+      this.seed = this.repr(this.modelValue.seed());
+      this.$emit('update:modelValue', this.modelValue);
     },
 
     updateSeed(input) {
@@ -68,8 +67,8 @@ export default {
 
       try {
         const buffer = this.$Buffer.from(input, this.encoding);
-        this.value = this.$crypto.Keypair.fromSeed(buffer);
-        this.$emit('input', this.value);
+        this.modelValue = this.$crypto.Keypair.fromSeed(buffer);
+        this.$emit('update:modelValue', this.modelValue);
       } catch (e) {
         this.seedError = true;
       }
