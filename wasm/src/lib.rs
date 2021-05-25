@@ -184,8 +184,11 @@ impl Keypair {
     /// Generates a new keypair using the `crypto.subtle` RNG.
     #[wasm_bindgen(constructor)]
     pub fn new() -> Self {
-        let mut rng = OsRng;
-        Keypair(ed::Keypair::generate(&mut rng))
+        let mut secret = [0_u8; 32];
+        OsRng.fill_bytes(&mut secret);
+        let secret = ed::SecretKey::from_bytes(&secret).unwrap();
+        let public = ed::PublicKey::from(&secret);
+        Keypair(ed::Keypair { secret, public })
     }
 
     /// Constructs the keypair from a seed.
@@ -323,7 +326,10 @@ impl Signature {
     /// any of small-subgroup public keys.
     #[wasm_bindgen(js_name = "fromRandomScalar")]
     pub fn from_random_scalar() -> Self {
-        let scalar = Scalar::random(&mut OsRng);
+        let mut scalar_bytes = [0_u8; 64];
+        OsRng.fill_bytes(&mut scalar_bytes);
+        let scalar = Scalar::from_bytes_mod_order_wide(&scalar_bytes);
+
         let point = (&scalar * &ED25519_BASEPOINT_TABLE).compress();
         let mut bytes = [0; 64];
         bytes[..32].copy_from_slice(point.as_bytes());
@@ -445,7 +451,9 @@ impl RandomScalar {
     /// Generates a new random scalar.
     #[wasm_bindgen(constructor)]
     pub fn new() -> Self {
-        RandomScalar(Scalar::random(&mut OsRng))
+        let mut scalar_bytes = [0_u8; 64];
+        OsRng.fill_bytes(&mut scalar_bytes);
+        RandomScalar(Scalar::from_bytes_mod_order_wide(&scalar_bytes))
     }
 }
 

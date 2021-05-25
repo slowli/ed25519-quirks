@@ -19,8 +19,8 @@ wee_alloc = { version = "0.4.5", optional = true }
 # Main dependencies.
 num-bigint = "0.4"
 sha2 = { version = "0.9", default-features = false }
-rand_core = "0.5.1"
-getrandom = { version = "0.1", features = ["wasm-bindgen"] }
+rand_core = { version = "0.6", features = ["getrandom"] }
+getrandom = { version = "0.2", features = ["js"] }
 
 [dependencies.curve25519-dalek]
 version = "3.1.0"
@@ -32,7 +32,7 @@ version = "1.0.1"
 default-features = false
 # Kudos to the crate authors for checking signature scalar malleability by default;
 # however, we need malleability for our use case.
-features = ["std", "u64_backend", "legacy_compatibility"]
+features = ["u64_backend", "legacy_compatibility"]
 
 [dev-dependencies]
 wasm-bindgen-test = "0.3.24"
