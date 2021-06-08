@@ -6,9 +6,10 @@ export default {
   data() {
     return { encoding: $('input[name=encoding]:checked').val() };
   },
-  computed: {
-    repr() {
-      return (buffer, encoding) => this.$Buffer.from(buffer, encoding).toString(this.encoding);
+  methods: {
+    repr(buffer, encoding) {
+      const outputEncoding = this.encoding ?? $('input[name=encoding]:checked').val();
+      return this.$Buffer.from(buffer, encoding).toString(outputEncoding);
     },
   },
 };
