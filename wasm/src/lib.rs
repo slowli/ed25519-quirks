@@ -470,7 +470,7 @@ impl ModifiedScalar {
         let valid = bytes[31] & 224 == 0;
         let signature = if valid {
             let mut signature_bytes = [0; 64];
-            signature_bytes[..32].copy_from_slice(&point);
+            signature_bytes[..32].copy_from_slice(point);
             signature_bytes[32..].copy_from_slice(&bytes);
             Some(Box::new(signature_bytes) as Box<[u8]>)
         } else {
