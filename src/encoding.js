@@ -6,19 +6,6 @@
 
 import { Buffer } from 'buffer';
 
-export const TextEncoder = global.TextEncoder || class {
-  constructor(encoding) {
-    if (encoding !== 'utf-8') {
-      throw new TypeError('Unsupported encoding');
-    }
-  }
-
-  // eslint-disable-next-line class-methods-use-this
-  encode(str) {
-    return Buffer.from(str, 'utf8');
-  }
-};
-
 export const TextDecoder = global.TextDecoder || class {
   constructor(encoding) {
     if (encoding !== 'utf-8') {
