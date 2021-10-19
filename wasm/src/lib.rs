@@ -10,13 +10,57 @@ use ed25519_dalek::{
     ed25519::signature::{Signature as _, Signer, Verifier},
 };
 use num_bigint::BigUint;
-use rand_core::{OsRng, RngCore};
+use rand_core::{CryptoRng, RngCore};
 use sha2::{Digest, Sha512};
 use wasm_bindgen::prelude::*;
 
 #[cfg(feature = "wee_alloc")]
 #[global_allocator]
 static ALLOC: wee_alloc::WeeAlloc = wee_alloc::WeeAlloc::INIT;
+
+////////// Binding to a JavaScript CSPRNG. ////////////
+
+#[wasm_bindgen]
+extern "C" {
+    #[wasm_bindgen(js_name = getRandomValues, js_namespace = crypto)]
+    fn random_bytes(dest: &mut [u8]);
+}
+
+/// RNG based on `window.crypto.getRandomValues()`.
+struct RandomValuesRng;
+
+impl RngCore for RandomValuesRng {
+    fn next_u32(&mut self) -> u32 {
+        let mut bytes = [0_u8; 4];
+        random_bytes(&mut bytes);
+        let mut result = bytes[0] as u32;
+        for (i, &byte) in bytes.iter().enumerate().skip(1) {
+            result += (byte as u32) << (i * 8);
+        }
+        result
+    }
+
+    fn next_u64(&mut self) -> u64 {
+        let mut bytes = [0_u8; 8];
+        random_bytes(&mut bytes);
+        let mut result = bytes[0] as u64;
+        for (i, &byte) in bytes.iter().enumerate().skip(1) {
+            result += (byte as u64) << (i * 8);
+        }
+        result
+    }
+
+    fn fill_bytes(&mut self, dest: &mut [u8]) {
+        random_bytes(dest);
+    }
+
+    fn try_fill_bytes(&mut self, dest: &mut [u8]) -> Result<(), rand_core::Error> {
+        self.fill_bytes(dest);
+        Ok(())
+    }
+}
+
+impl CryptoRng for RandomValuesRng {}
 
 ////////// JS-compatible iterator for `PublicKey`s. //////////
 
@@ -185,7 +229,7 @@ impl Keypair {
     #[wasm_bindgen(constructor)]
     pub fn new() -> Self {
         let mut secret = [0_u8; 32];
-        OsRng.fill_bytes(&mut secret);
+        RandomValuesRng.fill_bytes(&mut secret);
         let secret = ed::SecretKey::from_bytes(&secret).unwrap();
         let public = ed::PublicKey::from(&secret);
         Keypair(ed::Keypair { secret, public })
@@ -327,7 +371,7 @@ impl Signature {
     #[wasm_bindgen(js_name = "fromRandomScalar")]
     pub fn from_random_scalar() -> Self {
         let mut scalar_bytes = [0_u8; 64];
-        OsRng.fill_bytes(&mut scalar_bytes);
+        RandomValuesRng.fill_bytes(&mut scalar_bytes);
         let scalar = Scalar::from_bytes_mod_order_wide(&scalar_bytes);
 
         let point = (&scalar * &ED25519_BASEPOINT_TABLE).compress();
@@ -348,7 +392,7 @@ impl Signature {
     /// must do this check.
     #[wasm_bindgen(js_name = generateValidMessages)]
     pub fn generate_valid_messages(&self, public_key: &PublicKey, count: usize) -> Box<[JsValue]> {
-        let mut rng = OsRng;
+        let mut rng = RandomValuesRng;
 
         let messages: Vec<_> = (0..)
             .map(|_| match rng.next_u32() % 2 {
@@ -452,7 +496,7 @@ impl RandomScalar {
     #[wasm_bindgen(constructor)]
     pub fn new() -> Self {
         let mut scalar_bytes = [0_u8; 64];
-        OsRng.fill_bytes(&mut scalar_bytes);
+        RandomValuesRng.fill_bytes(&mut scalar_bytes);
         RandomScalar(Scalar::from_bytes_mod_order_wide(&scalar_bytes))
     }
 }
