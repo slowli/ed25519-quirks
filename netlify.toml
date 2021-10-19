@@ -2,6 +2,9 @@
 publish = "dist/"
 command = "bash ./build.sh"
 
+[build.environment]
+NODE_VERSION = "16.11.1"
+
 # Set up redirects from all aux domains to the canonical one.
 [[redirects]]
 from = "https://ed25519.wtf/*"

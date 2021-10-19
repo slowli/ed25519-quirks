@@ -5,8 +5,6 @@ on:
     branches: [ master ]
   pull_request:
     branches: [ master ]
-  schedule:
-    - cron: '30 3 * * WED'
 
 jobs:
   build:
@@ -24,7 +22,7 @@ jobs:
       - name: Install Node.js
         uses: actions/setup-node@v1
         with:
-          node-version: 14.x
+          node-version: 16.x
       - name: Install Rust
         uses: actions-rs/toolchain@v1
         with:
