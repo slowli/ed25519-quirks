@@ -1,12 +1,12 @@
 /*
- * Extra-cheap polyfill for `TextEncoder` / `TextDecoder` used in `wasm-bindgen`-generated code
- * and absent in Edge. Using a `text-encoding` package for this purpose bloats the app a couple
- * of times, hence this hacky solution.
+ * Extra-cheap polyfill for `TextDecoder` used in `wasm-bindgen`-generated code
+ * and absent in older Edge versions. Using a `text-encoding` package for this purpose
+ * bloats the app a couple of times, hence this hacky solution.
  */
 
 import { Buffer } from 'buffer';
 
-export const TextDecoder = global.TextDecoder || class {
+export default global.TextDecoder || class {
   constructor(encoding) {
     if (encoding !== 'utf-8') {
       throw new TypeError('Unsupported encoding');

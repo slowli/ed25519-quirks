@@ -78,10 +78,10 @@ module.exports = {
 
     new VueLoaderPlugin(),
 
-    // This hard-codes the relative path to the `encoding` module from the `wasm/pkg` directory,
-    // which is the only place using `TextEncoder` / `TextDecoder` globals.
+    // This hard-codes the relative path to the `TextDecoder` module from the `wasm/pkg` directory,
+    // which is the only place using the `TextDecoder` global.
     new webpack.ProvidePlugin({
-      TextDecoder: ['../../src/encoding', 'TextDecoder']
+      TextDecoder: ['../../src/TextDecoder', 'default']
     })
   ],
 };

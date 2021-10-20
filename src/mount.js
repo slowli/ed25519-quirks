@@ -16,8 +16,8 @@ function getHtmlFragments(selector) {
 }
 
 export default async function mount(rootComponent) {
-  // Needed to patch `TextEncoder` / `TextDecoder`.
-  await import(/* webpackChunkName: "bundle" */ './encoding');
+  // Needed to patch `TextDecoder`.
+  await import(/* webpackChunkName: "bundle" */ './TextDecoder');
 
   const { createApp } = await import(/* webpackChunkName: "bundle" */ 'vue');
   const app = createApp(rootComponent, {
