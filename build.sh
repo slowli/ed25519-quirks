@@ -2,16 +2,19 @@
 
 # Build script for one-shot build environments.
 
-RUST_VERSION=1.52.1
-
 set -ex
 
+if [[ "$RUST_VERSION" == "" ]]; then
+  echo "RUST_VERSION env var is not defined; set it to the Rust toolchain to use (e.g., 1.52.1)"
+  exit 1
+fi
+
 # Install Rust
-curl -sSf https://sh.rustup.rs | sh -s -- --default-toolchain=$RUST_VERSION -y
+curl -sSf https://sh.rustup.rs | sh -s -- --default-toolchain="$RUST_VERSION" -y
 source ~/.cargo/env
-rustup target add --toolchain $RUST_VERSION wasm32-unknown-unknown
+rustup target add --toolchain "$RUST_VERSION" wasm32-unknown-unknown
 curl https://rustwasm.github.io/wasm-pack/installer/init.sh -sSf | sh -s -- -f
-rustup override set $RUST_VERSION
+rustup override set "$RUST_VERSION"
 
 # Build!
 PATH="$PATH:$HOME/.local/bin" BINARYEN_CORES=1 npm run build
