@@ -20,12 +20,12 @@ module.exports = {
     chunkFilename: '[name].[chunkhash:8].js'
   },
   experiments: {
-    // TODO: use `asyncWebAssembly` instead
-    syncWebAssembly: true
+    asyncWebAssembly: true,
+    topLevelAwait: true
   },
   optimization: {
     splitChunks: {
-      chunks: 'async', // 'all' doesn't work for some reason
+      chunks: 'async',
       cacheGroups: {
         vendors: false // disable splitting the main chunk into 3rd-party and built-in parts
       }
