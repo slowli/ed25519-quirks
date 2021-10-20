@@ -1,7 +1,6 @@
 {
   "parserOptions": {
-    "ecmaVersion": 2017,
-    "parser": "babel-eslint"
+    "ecmaVersion": 2022
   },
   "extends": [
     "airbnb-base",

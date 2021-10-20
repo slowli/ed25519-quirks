@@ -20,12 +20,12 @@ module.exports = {
     chunkFilename: '[name].[chunkhash:8].js'
   },
   experiments: {
-    // TODO: use `asyncWebAssembly` instead
-    syncWebAssembly: true
+    asyncWebAssembly: true,
+    topLevelAwait: true
   },
   optimization: {
     splitChunks: {
-      chunks: 'async', // 'all' doesn't work for some reason
+      chunks: 'async',
       cacheGroups: {
         vendors: false // disable splitting the main chunk into 3rd-party and built-in parts
       }
@@ -78,11 +78,10 @@ module.exports = {
 
     new VueLoaderPlugin(),
 
-    // This hard-codes the relative path to the `encoding` module from the `wasm/pkg` directory,
-    // which is the only place using `TextEncoder` / `TextDecoder` globals.
+    // This hard-codes the relative path to the `TextDecoder` module from the `wasm/pkg` directory,
+    // which is the only place using the `TextDecoder` global.
     new webpack.ProvidePlugin({
-      TextEncoder: ['../../src/encoding', 'TextEncoder'],
-      TextDecoder: ['../../src/encoding', 'TextDecoder']
+      TextDecoder: ['../../src/TextDecoder', 'default']
     })
   ],
 };

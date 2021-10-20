@@ -19,8 +19,7 @@ wee_alloc = { version = "0.4.5", optional = true }
 # Main dependencies.
 num-bigint = "0.4"
 sha2 = { version = "0.9", default-features = false }
-rand_core = { version = "0.6", features = ["getrandom"] }
-getrandom = { version = "0.2", features = ["js"] }
+rand_core = { version = "0.6", default-features = false }
 
 [dependencies.curve25519-dalek]
 version = "3.1.0"
