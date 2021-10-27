@@ -30,7 +30,7 @@
     "chai": "^4.3.4",
     "chai-bytes": "^0.1.2",
     "copy-webpack-plugin": "^9.0.0",
-    "css-loader": "^6.4.0",
+    "css-loader": "^6.5.0",
     "dirty-chai": "^2.0.1",
     "eslint": "^8.0.1",
     "eslint-config-airbnb-base": "^14.2.1",
