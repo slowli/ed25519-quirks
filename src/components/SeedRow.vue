@@ -27,7 +27,7 @@
 </template>
 <script>
 export default {
-  name: 'Seed',
+  name: 'SeedRow',
   props: {
     encoding: { type: String, required: true },
   },

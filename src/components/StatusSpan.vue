@@ -16,7 +16,7 @@
 </template>
 <script>
 export default {
-  name: 'Status',
+  name: 'StatusSpan',
   props: {
     status: { type: String, default: 'ok' },
   },
