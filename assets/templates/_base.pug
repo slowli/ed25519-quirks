@@ -23,6 +23,10 @@ html(lang='en', prefix="og:http://ogp.me/ns#")
     meta(name='og:description', content=page.description)
     meta(name='og:type', content='article')
 
+    link(rel='icon', type='image/png', sizes='48x48', href=basePath + '/_assets/css/favicon-48x48.png')
+    link(rel='apple-touch-icon', type='image/png', sizes='180x180', href=basePath + '/_assets/css/apple-touch-icon-180x180.png')
+    link(rel='icon', type='image/svg+xml', href=basePath + '/_assets/css/favicon.svg')
+
     script(type='application/ld+json').
       {
         "@context": "https://schema.org/",
