@@ -7,6 +7,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const AutoprefixerPlugin = require('autoprefixer');
 
 const pages = require('./assets/templates/pages.json');
+
 const publicPath = process.env.WEBPACK_PUBLIC_PATH || '/';
 
 const entries = {
@@ -17,7 +18,6 @@ const entries = {
   wildcards: './src/wildcards',
   clamping: './src/clamping',
 };
-
 const htmlPlugins = Object.keys(entries).map((entry) => new HtmlWebpackPlugin({
   filename: entry === 'index' ? 'index.html' : `${entry}/index.html`,
   chunks: [entry, 'commons'],
@@ -38,7 +38,7 @@ module.exports = {
   },
   experiments: {
     asyncWebAssembly: true,
-    topLevelAwait: true
+    topLevelAwait: true,
   },
   optimization: {
     splitChunks: {
@@ -50,26 +50,26 @@ module.exports = {
           chunks: 'initial',
           minChunks: Object.keys(entries).length,
         },
-      }
-    }
+      },
+    },
   },
   module: {
     rules: [
       {
         test: /\.js/,
         exclude: /node_modules/,
-        use: 'babel-loader'
+        use: 'babel-loader',
       },
       {
         test: /\.vue$/,
-        use: 'vue-loader'
+        use: 'vue-loader',
       },
       {
         test: /\.css$/,
         use: [
           'vue-style-loader',
-          'css-loader'
-        ]
+          'css-loader',
+        ],
       },
       {
         test: /\.scss$/i,
@@ -95,7 +95,7 @@ module.exports = {
         test: /\.(woff|woff2)$/i,
         type: 'asset',
       },
-    ]
+    ],
   },
   plugins: [
     new MiniCssExtractPlugin({
@@ -107,9 +107,9 @@ module.exports = {
     // This hard-codes the relative path to the `TextDecoder` module from the `wasm/pkg` directory,
     // which is the only place using the `TextDecoder` global.
     new webpack.ProvidePlugin({
-      TextDecoder: ['../../src/TextDecoder', 'default']
+      TextDecoder: ['../../src/TextDecoder', 'default'],
     }),
 
-    ...htmlPlugins
+    ...htmlPlugins,
   ],
 };

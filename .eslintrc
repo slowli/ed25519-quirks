@@ -26,6 +26,13 @@
       }
     }],
 
+    "import/no-extraneous-dependencies": [
+      "error",
+      {
+        "devDependencies": ["assets/*.js", "*.config.js", "**/*.spec.js"]
+      }
+    ],
+
     "object-curly-spacing" : ["error", "always"]
   }
 }
