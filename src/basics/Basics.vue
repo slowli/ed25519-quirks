@@ -259,7 +259,9 @@ export default {
   },
 
   mounted() {
-    $('#verification button').show().click((event) => {
+    const verifyButton = document.querySelector('#verification button');
+    verifyButton.style.display = 'inline-block';
+    verifyButton.addEventListener('click', (event) => {
       event.preventDefault();
       this.copyFromSigning();
     });

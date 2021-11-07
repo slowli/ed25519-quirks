@@ -54,8 +54,9 @@
           href="#"
           role="button"
           title="Generate a new signature"
+          class="text-decoration-none"
           @click.prevent="updateSignature()"
-        ><i class="fas fa-dice"></i></a>
+        ><i class="bi bi-arrow-clockwise"></i></a>
       </template>
     </DataRow>
     <DataRow

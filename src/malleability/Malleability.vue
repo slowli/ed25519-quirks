@@ -66,8 +66,9 @@
         <a
           href="#"
           role="button"
+          class="text-decoration-none"
           @click.prevent="generateScalar()"
-        ><i class="fas fa-dice"></i></a>
+        ><i class="bi bi-arrow-clockwise"></i></a>
       </template>
     </DataRow>
     <DataRow name="New signature" :data="repr(randomizedSignature.bytes())" />

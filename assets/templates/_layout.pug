@@ -8,14 +8,16 @@ mixin equation
 mixin loading
   .loading-progress.card.my-2.small
     .card-body
-      h6.card-title Loading interactive parts…
-      p.card-text This may take some time. <i class="text-muted fas fa-spinner fa-spin"></i>
+      h5.card-title.mb-3 Loading interactive parts
+      div.card-text.d-flex.align-items-center
+        div.spinner-border.text-primary.me-3(role='status', aria-hidden=true)
+        em This can take come time…
 
 block body
   header.body-header
     div.container
       h1.display-3.mb-4
-        a.d-block(href = basePath) Ed25519 Quirks
+        a.text-reset.text-decoration-none.d-block(href = basePath) Ed25519 Quirks
       nav.navbar.navbar-expand-lg.navbar-light.px-0.pb-0
         button.navbar-toggler.mb-1(
           type="button"

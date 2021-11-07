@@ -12,10 +12,7 @@
 
     "vue/max-attributes-per-line": ["error", {
       "singleline": 2,
-      "multiline": {
-        "max": 1,
-        "allowFirstLine": false
-      }
+      "multiline": 1
     }],
     "vue/multiline-html-element-content-newline": ["error", {
       "ignores": ["label", "a", "button", "code", "RouterLink", "Equation"]

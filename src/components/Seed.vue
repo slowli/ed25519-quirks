@@ -5,8 +5,9 @@
         href="#"
         role="button"
         title="Generate a new random seed"
+        class="text-decoration-none"
         @click.prevent="generateKeypair()"
-      ><i class="fas fa-dice"></i></a>
+      ><i class="bi bi-arrow-clockwise"></i></a>
     </label>
 
     <div class="col-md-9 col-lg-10">
