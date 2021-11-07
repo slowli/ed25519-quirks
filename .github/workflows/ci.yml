@@ -38,15 +38,15 @@ jobs:
 
       # Rust-related checks
       - name: Format
-        run: npm run lint-wasm:fmt
+        run: npm run lint:wasm:fmt
       - name: Clippy
         uses: actions-rs/clippy-check@v1
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          args: --manifest-path wasm/Cargo.toml --all --tests -- -D warnings
-      - run: npm run test-wasm -- --chrome --firefox
+          args: --manifest-path wasm/Cargo.toml --all-targets -- -D warnings
+      - run: npm run test:wasm -- --chrome --firefox
 
       # Front-end checks (`npm run build` should be the first one, it builds WASM)
       - run: npm run build
-      - run: npm run lint-web
-      - run: npm test
+      - run: npm run lint:js
+      - run: npm run test:js
