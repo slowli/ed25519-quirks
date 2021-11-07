@@ -15,6 +15,7 @@ const entries = {
   basics: './src/basics',
   malleability: './src/malleability',
   wildcards: './src/wildcards',
+  clamping: './src/clamping',
 };
 
 const htmlPlugins = Object.keys(entries).map((entry) => new HtmlWebpackPlugin({
