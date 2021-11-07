@@ -63,7 +63,8 @@ block body
                     )
                     label.form-check-label(for='encoding-base64') Base64
   .container.pt-4
-    block main
+    main
+      block main
     if page.prev || page.next
       nav.page-nav.row.mt-4
         if page.prev !== undefined
@@ -77,14 +78,17 @@ block body
             a(href=`${basePath}/${page.next}/`)
               | #{pages[page.next].title}
               span.text-muted.ms-1 →
-    footer.page-footer.small.text-muted
-      span.copyright
-        | © 2021 Alex Ostrovski. Licensed under
-        |
-        a(rel='license', href='https://www.apache.org/licenses/LICENSE-2.0') Apache 2.0
-        | .
-      .float-none.float-sm-end
-        a(href=`${basePath}/about/`) About
-        | &nbsp;•
-        |
-        a(href='https://github.com/slowli/ed25519-quirks') GitHub
+    footer.page-footer.small
+      div.row
+        div.col-md-9.text-muted.mb-2
+          | © 2021 Alex Ostrovski. Licensed under
+          |
+          a(rel='license', href='https://www.apache.org/licenses/LICENSE-2.0') Apache 2.0
+          | .
+        div.col-md-3
+          h5 Useful links
+
+          a(href=`${basePath}/about/`) About
+          | &nbsp;•
+          |
+          a(href='https://github.com/slowli/ed25519-quirks') GitHub
