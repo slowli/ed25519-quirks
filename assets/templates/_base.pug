@@ -1,0 +1,44 @@
+-
+  var basePath = '';
+  var pages;
+  var entryPoint;
+
+block pageInit
+
+-
+  var page = pages[entryPoint];
+  var keywords = page.keywords || [];
+  keywords.push('ed25519', 'cryptography');
+
+doctype html
+html(lang='en', prefix="og:http://ogp.me/ns#")
+  head
+    meta(charset='utf-8')
+    meta(name='language', content='en')
+    meta(name='viewport', content='width=device-width,initial-scale=1,shrink-to-fit=no')
+    meta(name='author', content='Alex Ostrovski')
+    meta(name='keywords', content=keywords.join(', '))
+    meta(name='description', content=page.description)
+    meta(name='og:title', content=page.title)
+    meta(name='og:description', content=page.description)
+    meta(name='og:type', content='article')
+
+    link(rel='icon', type='image/png', sizes='48x48', href=basePath + '/_assets/css/favicon-48x48.png')
+    link(rel='apple-touch-icon', type='image/png', sizes='180x180', href=basePath + '/_assets/css/apple-touch-icon-180x180.png')
+    link(rel='icon', type='image/svg+xml', href=basePath + '/_assets/css/favicon.svg')
+
+    script(type='application/ld+json').
+      {
+        "@context": "https://schema.org/",
+        "@type": "#{(entryPoint === '') ? 'WebSite' : 'WebPage'}",
+        "author": {
+          "@type": "Person",
+          "name": "Alex Ostrovski"
+        },
+        "headline": "#{page.title}",
+        "description": "#{page.description}"
+      }
+
+    title #{page.title} | Ed25519 Quirks
+  body
+    block body

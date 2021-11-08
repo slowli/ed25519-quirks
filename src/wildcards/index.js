@@ -1,4 +1,4 @@
 import mount from '../mount';
-import WildcardsPage from './Wildcards.vue';
+import WildcardsPage from './WildcardsPage.vue';
 
 mount(WildcardsPage);

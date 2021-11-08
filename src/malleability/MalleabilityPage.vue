@@ -2,7 +2,7 @@
   <!-- eslint-disable vue/no-v-html -->
   <div>
     <form @submit.prevent="">
-      <Seed v-model="keypair" :encoding="encoding" />
+      <SeedRow v-model="keypair" :encoding="encoding" />
       <div class="row mb-3">
         <label for="message" class="col-md-3 col-lg-2 col-form-label">Message <code>M</code></label>
         <div class="col-md-9 col-lg-10">
@@ -38,7 +38,7 @@
     />
     <DataRow name="New signature" :data="repr(modifiedScalar.signature())">
       <template #key>
-        <Status :status="modifiedScalar.valid() ? 'ok' : 'fail'" />
+        <StatusSpan :status="modifiedScalar.valid() ? 'ok' : 'fail'" />
       </template>
     </DataRow>
 
@@ -66,8 +66,9 @@
         <a
           href="#"
           role="button"
+          class="text-decoration-none"
           @click.prevent="generateScalar()"
-        ><i class="fas fa-dice"></i></a>
+        ><i class="bi bi-arrow-clockwise"></i></a>
       </template>
     </DataRow>
     <DataRow name="New signature" :data="repr(randomizedSignature.bytes())" />
@@ -77,12 +78,12 @@
 </template>
 <script>
 import DataRow from '../components/DataRow.vue';
-import Seed from '../components/Seed.vue';
-import Status from '../components/Status.vue';
+import SeedRow from '../components/SeedRow.vue';
+import StatusSpan from '../components/StatusSpan.vue';
 import withEncoding from '../mixins/withEncoding';
 
 export default {
-  components: { DataRow, Seed, Status },
+  components: { DataRow, SeedRow, StatusSpan },
   mixins: [withEncoding],
 
   data() {

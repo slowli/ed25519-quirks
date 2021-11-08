@@ -26,7 +26,7 @@
       <div class="row mb-3">
         <label class="col-md-3 col-lg-2 col-form-label" for="user-message">
           Feeling lucky?
-          <Status :status="publicKey.verify($Buffer.from(message, 'utf8'), signature.bytes()) ? 'ok' : 'fail'" />
+          <StatusSpan :status="publicKey.verify($Buffer.from(message, 'utf8'), signature.bytes()) ? 'ok' : 'fail'" />
         </label>
         <div class="col-md-9 col-lg-10">
           <input
@@ -54,8 +54,9 @@
           href="#"
           role="button"
           title="Generate a new signature"
+          class="text-decoration-none"
           @click.prevent="updateSignature()"
-        ><i class="fas fa-dice"></i></a>
+        ><i class="bi bi-arrow-clockwise"></i></a>
       </template>
     </DataRow>
     <DataRow
@@ -78,11 +79,11 @@
 </template>
 <script>
 import DataRow from '../components/DataRow.vue';
-import Status from '../components/Status.vue';
+import StatusSpan from '../components/StatusSpan.vue';
 import withEncoding from '../mixins/withEncoding';
 
 export default {
-  components: { DataRow, Status },
+  components: { DataRow, StatusSpan },
   mixins: [withEncoding],
 
   data() {

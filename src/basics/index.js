@@ -1,4 +1,4 @@
 import mount from '../mount';
-import BasicsPage from './Basics.vue';
+import BasicsPage from './BasicsPage.vue';
 
 mount(BasicsPage);

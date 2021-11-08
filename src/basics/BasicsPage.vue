@@ -4,7 +4,7 @@
     <div v-html="htmlFragments.generation"></div>
 
     <form class="mb-3" @submit.prevent="">
-      <Seed v-model="keypair" :encoding="encoding" />
+      <SeedRow v-model="keypair" :encoding="encoding" />
     </form>
 
     <DataRow
@@ -154,7 +154,7 @@
         wrapper="R′ = [s]B - [h]A = Pt(&quot;$&quot;)"
       >
         <template #key>
-          <Status :status="verification.success ? 'ok' : 'fail'" />
+          <StatusSpan :status="verification.success ? 'ok' : 'fail'" />
         </template>
         To verify whether signature is valid, it’s enough to compare <code>R′</code>
         to first 32 bytes of the signature (i.e., <code>R</code>).
@@ -167,13 +167,13 @@
 /* eslint-env jquery */
 
 import DataRow from '../components/DataRow.vue';
-import Seed from '../components/Seed.vue';
-import Status from '../components/Status.vue';
+import SeedRow from '../components/SeedRow.vue';
+import StatusSpan from '../components/StatusSpan.vue';
 import withEncoding from '../mixins/withEncoding';
 
 export default {
   components: {
-    DataRow, Seed, Status,
+    DataRow, SeedRow, StatusSpan,
   },
   mixins: [withEncoding],
 
@@ -259,7 +259,9 @@ export default {
   },
 
   mounted() {
-    $('#verification button').show().click((event) => {
+    const verifyButton = document.querySelector('#verification button');
+    verifyButton.style.display = 'inline-block';
+    verifyButton.addEventListener('click', (event) => {
       event.preventDefault();
       this.copyFromSigning();
     });

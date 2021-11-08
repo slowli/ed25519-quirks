@@ -8,14 +8,16 @@ mixin equation
 mixin loading
   .loading-progress.card.my-2.small
     .card-body
-      h6.card-title Loading interactive parts…
-      p.card-text This may take some time. <i class="text-muted fas fa-spinner fa-spin"></i>
+      h5.card-title.mb-3 Loading interactive parts
+      div.card-text.d-flex.align-items-center
+        div.spinner-border.text-primary.me-3(role='status', aria-hidden=true)
+        em This can take come time…
 
 block body
   header.body-header
     div.container
       h1.display-3.mb-4
-        a.d-block(href = basePath) Ed25519 Quirks
+        a.text-reset.text-decoration-none.d-block(href = basePath) Ed25519 Quirks
       nav.navbar.navbar-expand-lg.navbar-light.px-0.pb-0
         button.navbar-toggler.mb-1(
           type="button"
@@ -61,7 +63,8 @@ block body
                     )
                     label.form-check-label(for='encoding-base64') Base64
   .container.pt-4
-    block main
+    main
+      block main
     if page.prev || page.next
       nav.page-nav.row.mt-4
         if page.prev !== undefined
@@ -75,14 +78,17 @@ block body
             a(href=`${basePath}/${page.next}/`)
               | #{pages[page.next].title}
               span.text-muted.ms-1 →
-    footer.page-footer.small.text-muted
-      span.copyright
-        | © 2021 Alex Ostrovski. Licensed under
-        |
-        a(rel='license', href='https://www.apache.org/licenses/LICENSE-2.0') Apache 2.0
-        | .
-      .float-none.float-sm-end
-        a(href=`${basePath}/about/`) About
-        | &nbsp;•
-        |
-        a(href='https://github.com/slowli/ed25519-quirks') GitHub
+    footer.page-footer.small
+      div.row
+        div.col-md-9.text-muted.mb-2
+          | © 2021 Alex Ostrovski. Licensed under
+          |
+          a(rel='license', href='https://www.apache.org/licenses/LICENSE-2.0') Apache 2.0
+          | .
+        div.col-md-3
+          h5 Useful links
+
+          a(href=`${basePath}/about/`) About
+          | &nbsp;•
+          |
+          a(href='https://github.com/slowli/ed25519-quirks') GitHub

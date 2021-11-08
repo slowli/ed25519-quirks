@@ -5,14 +5,14 @@ import { Buffer as $Buffer } from 'buffer';
 import chai from 'chai';
 import chaiBytes from 'chai-bytes';
 import dirtyChai from 'dirty-chai';
-import Seed from '../../src/components/Seed.vue';
+import SeedRow from '../../src/components/SeedRow.vue';
 
 const { expect } = chai.use(chaiBytes).use(dirtyChai);
 // Cryptographic dependency that we need to load asynchronously.
 let $crypto = {};
 
 function createSeed({ encoding } = {}) {
-  return mount(Seed, {
+  return mount(SeedRow, {
     props: {
       encoding: encoding || 'base64',
     },
@@ -22,7 +22,7 @@ function createSeed({ encoding } = {}) {
   });
 }
 
-describe('Seed.vue', () => {
+describe('SeedRow.vue', () => {
   before(async () => {
     $crypto = await import(/* webpackPrefetch: true */ '../../src/crypto');
   });

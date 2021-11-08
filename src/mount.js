@@ -1,16 +1,21 @@
-/* eslint-env jquery */
+import './common';
 
 function reportError(error) {
-  $('.loading-progress').addClass('border-danger');
-  $('.loading-progress .card-title').addClass('text-danger').text('Loading failed');
-  $('.loading-progress .card-text').text(`${error}`);
+  document.querySelector('.loading-progress').classList.add('border-danger');
+  const cardTitle = document.querySelector('.loading-progress .card-title');
+  cardTitle.classList.add('text-danger');
+  cardTitle.innerText = 'Loading failed';
+
+  const cardText = document.querySelector('.loading-progress .card-text');
+  cardText.innerText = error;
 }
 
-function getHtmlFragments(selector) {
+function getHtmlFragments(rootId) {
   const slots = {};
-  $(selector).children('[slot]').each(function each() {
-    const slotName = $(this).attr('slot');
-    slots[slotName] = $(this)[0].innerHTML;
+  const slotElements = document.querySelectorAll(`${rootId} [slot]`);
+  slotElements.forEach((slotElement) => {
+    const slotName = slotElement.attributes.slot.value;
+    slots[slotName] = slotElement.innerHTML;
   });
   return slots;
 }
@@ -37,7 +42,10 @@ export default async function mount(rootComponent) {
 
   const mountedApp = app.mount('#app');
 
-  $('input[name=encoding]').change(() => {
-    mountedApp.encoding = $('input[name=encoding]:checked').val();
+  const encodingRadios = document.querySelectorAll('input[name=encoding]');
+  encodingRadios.forEach((radio) => {
+    radio.addEventListener('change', () => {
+      mountedApp.encoding = radio.value;
+    });
   });
 }

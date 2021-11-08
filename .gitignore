@@ -6,6 +6,7 @@
 
 # JS / web targets
 /dist
+/assets/icons
 node_modules
 npm-debug.log
 wasm-pack.log

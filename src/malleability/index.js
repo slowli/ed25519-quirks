@@ -1,4 +1,4 @@
 import mount from '../mount';
-import MalleabilityPage from './Malleability.vue';
+import MalleabilityPage from './MalleabilityPage.vue';
 
 mount(MalleabilityPage);
