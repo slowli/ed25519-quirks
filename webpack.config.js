@@ -1,5 +1,8 @@
+const { execSync } = require('child_process');
+const fs = require('fs');
 const path = require('path');
 
+const toml = require('toml');
 const webpack = require('webpack');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const { VueLoaderPlugin } = require('vue-loader');
@@ -9,7 +12,48 @@ const AutoprefixerPlugin = require('autoprefixer');
 
 const pages = require('./assets/templates/pages.json');
 
-const publicPath = process.env.WEBPACK_PUBLIC_PATH || '/';
+function requireToml(pathToToml) {
+  return toml.parse(fs.readFileSync(pathToToml, { encoding: 'utf-8' }));
+}
+
+const cargoLockfile = requireToml('./wasm/Cargo.lock');
+
+function getDependencyInfo(dependencyName) {
+  const packageInfo = cargoLockfile.package.find(({ name }) => name === dependencyName);
+  return {
+    version: packageInfo.version,
+  };
+}
+
+function getGitInfo() {
+  const gitOutput = execSync('git status --porcelain=v2 --branch', {
+    encoding: 'utf8',
+  });
+  const gitOutputLines = gitOutput.split('\n');
+  const commitLine = gitOutputLines.find((line) => line.startsWith('# branch.oid'));
+  const commitHash = commitLine.match(/\b(?<hash>[0-9a-f]{40})$/).groups.hash;
+  const isDirty = gitOutputLines.some((line) => line.startsWith('1 ') || line.startsWith('2 '));
+  return { commitHash, isDirty };
+}
+
+function getRustInfo() {
+  const rustcOutput = execSync('rustc --version', {
+    encoding: 'utf8',
+  });
+  return rustcOutput.replace(/^rustc\s+/, '').trim();
+}
+
+const buildInfo = {
+  deps: ['ed25519-dalek', 'curve25519-dalek', 'wasm-bindgen'].reduce(
+    (acc, name) => {
+      acc[name] = getDependencyInfo(name);
+      return acc;
+    },
+    {},
+  ),
+  git: getGitInfo(),
+  rust: getRustInfo(),
+};
 
 const entries = {
   index: './src/home',
@@ -25,6 +69,7 @@ const htmlPlugins = Object.keys(entries).map((entry) => new HtmlWebpackPlugin({
   template: `assets/templates/${entry}.pug`,
   templateParameters: {
     $pages: pages,
+    $buildInfo: buildInfo,
   },
 }));
 
@@ -32,7 +77,7 @@ module.exports = {
   entry: entries,
   output: {
     path: path.resolve(__dirname, 'dist'),
-    publicPath,
+    publicPath: process.env.WEBPACK_PUBLIC_PATH || '/',
     filename: '_assets/js/[name].js',
     chunkFilename: '_assets/js/[name].[chunkhash:8].js',
     webassemblyModuleFilename: '_assets/js/[hash].module.wasm',
