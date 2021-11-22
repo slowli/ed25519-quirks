@@ -7,7 +7,7 @@ use curve25519_dalek::{
 };
 use ed25519_dalek::{
     self as ed,
-    ed25519::signature::{Signature as _, Signer, Verifier},
+    ed25519::signature::{Signer, Verifier},
 };
 use num_bigint::BigUint;
 use rand_core::{CryptoRng, RngCore};

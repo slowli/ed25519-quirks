@@ -7,6 +7,9 @@ updates:
       time: "03:00"
     open-pull-requests-limit: 10
     assignees: [ slowli ]
+    ignore:
+      - dependency-name: "*"
+        update-types: ["version-update:semver-patch"]
 
   - package-ecosystem: npm
     directory: "/"

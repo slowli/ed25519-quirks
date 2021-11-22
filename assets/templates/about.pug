@@ -5,6 +5,7 @@ block pageInit
     entryPoint = 'about';
     basePath = '..';
     pages = $pages;
+    const { git, rust, deps } = $buildInfo;
 
 block main
   p.lead.mb-4 This web app was made possible with the help of following awesome tech:
@@ -21,3 +22,24 @@ block main
       Curve25519 routines
     li <a href="https://vuejs.org/">Vue framework</a> for front-end
   p See <a href="https://github.com/slowli/ed25519-quirks">source code of the app</a> for the full list.
+
+  h3 Build Info
+
+  p
+    em.small Versions of key dependencies to simplify debugging.
+
+  ul
+    li
+      | Deployed commit:
+      |
+      a(href=`https://github.com/slowli/justwebtoken.io/tree/${git.commitHash}`) #{git.commitHash.substring(0, 7)}
+    li.
+      Rust version: #{rust}
+
+    for dep in Object.entries(deps)
+      -
+        const [depName, depInfo] = dep;
+      li
+        | #{depName} version:
+        |
+        a(href=`https://crates.io/crates/${depName}/${depInfo.version}`) #{depInfo.version}
