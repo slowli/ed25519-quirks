@@ -111,7 +111,6 @@ dependencies = [
  "ed25519-dalek",
  "num-bigint",
  "rand_core 0.6.3",
- "sha2",
  "wasm-bindgen",
  "wasm-bindgen-test",
  "wee_alloc",

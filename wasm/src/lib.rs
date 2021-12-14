@@ -2,16 +2,17 @@
 
 use curve25519_dalek::{
     constants::{BASEPOINT_ORDER, ED25519_BASEPOINT_TABLE, EIGHT_TORSION},
+    digest::Digest,
     edwards::{CompressedEdwardsY, EdwardsPoint},
     scalar::Scalar,
 };
 use ed25519_dalek::{
     self as ed,
     ed25519::signature::{Signer, Verifier},
+    Sha512,
 };
 use num_bigint::BigUint;
 use rand_core::{CryptoRng, RngCore};
-use sha2::{Digest, Sha512};
 use wasm_bindgen::prelude::*;
 
 #[cfg(feature = "wee_alloc")]
