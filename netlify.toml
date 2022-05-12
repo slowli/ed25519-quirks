@@ -4,7 +4,7 @@ command = "bash ./build.sh"
 
 [build.environment]
 NODE_VERSION = "16.11.1"
-RUST_VERSION = "1.52.1"
+RUST_VERSION = "1.58.1"
 
 # Set up redirects from all aux domains to the canonical one.
 [[redirects]]
