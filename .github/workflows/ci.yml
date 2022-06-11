@@ -34,7 +34,9 @@ jobs:
         with:
           version: 'latest'
 
-      - run: npm ci
+      # `--force` flag is required because of pug@3 conflicting with pug-loader peer dependency.
+      # pug@3 works fine in practice.
+      - run: npm ci --force
 
       # Rust-related checks
       - name: Format
