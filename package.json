@@ -42,7 +42,7 @@
     "eslint-plugin-vue": "^9.1.1",
     "fantasticon": "^1.2.3",
     "html-webpack-plugin": "^5.5.0",
-    "karma": "^6.3.16",
+    "karma": "^6.4.0",
     "karma-chai": "^0.1.0",
     "karma-chrome-launcher": "^3.1.0",
     "karma-firefox-launcher": "^2.1.0",
