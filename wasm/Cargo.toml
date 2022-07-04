@@ -1,6 +1,6 @@
 [package]
 name = "ed25519-quirks"
-edition = "2018"
+edition = "2021"
 version = "0.1.0"
 authors = ["Alex Ostrovski <ostrovski.alex@gmail.com>"]
 license = "Apache-2.0"
