@@ -8,13 +8,15 @@ description = "WASM part of the Ed25519 Quirks web app"
 repository = "https://github.com/slowli/ed25519-quirks"
 publish = false
 
+[package.metadata.wasm-pack.profile.release]
+wasm-opt = ["-Os", "--enable-mutable-globals"]
+
 [lib]
 crate-type = ["cdylib", "rlib"]
 
 [dependencies]
 # WASM / Web stuff.
 wasm-bindgen = "0.2.74"
-wee_alloc = { version = "0.4.5", optional = true }
 
 # Main dependencies.
 num-bigint = "0.4"
@@ -35,12 +37,8 @@ features = ["u64_backend", "legacy_compatibility"]
 [dev-dependencies]
 wasm-bindgen-test = "0.3.24"
 
-[features]
-default = ["wee_alloc"]
-
 [profile.release]
+panic = "abort"
+codegen-units = 1
+opt-level = "z" # Optimize for size, rather than speed
 lto = true
-opt-level = "s"
-
-[package.metadata.wasm-pack.profile.release]
-wasm-opt = ["-Os", "--enable-mutable-globals"]
