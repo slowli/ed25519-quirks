@@ -1,5 +1,15 @@
 //! Rust part of Ed25519 Quirks.
 
+#![warn(missing_debug_implementations, bare_trait_objects, rust_2018_idioms)]
+#![warn(clippy::all, clippy::pedantic)]
+#![allow(
+    clippy::must_use_candidate,
+    clippy::missing_panics_doc,
+    clippy::missing_errors_doc,
+    clippy::drop_non_drop, // produced by `wasm_bindgen` macro
+    clippy::drop_copy // produced by `wasm_bindgen` macro
+)]
+
 use curve25519_dalek::{
     constants::{BASEPOINT_ORDER, ED25519_BASEPOINT_TABLE, EIGHT_TORSION},
     digest::Digest,
@@ -32,9 +42,9 @@ impl RngCore for RandomValuesRng {
     fn next_u32(&mut self) -> u32 {
         let mut bytes = [0_u8; 4];
         random_bytes(&mut bytes);
-        let mut result = bytes[0] as u32;
+        let mut result = u32::from(bytes[0]);
         for (i, &byte) in bytes.iter().enumerate().skip(1) {
-            result += (byte as u32) << (i * 8);
+            result += u32::from(byte) << (i * 8);
         }
         result
     }
@@ -42,9 +52,9 @@ impl RngCore for RandomValuesRng {
     fn next_u64(&mut self) -> u64 {
         let mut bytes = [0_u8; 8];
         random_bytes(&mut bytes);
-        let mut result = bytes[0] as u64;
+        let mut result = u64::from(bytes[0]);
         for (i, &byte) in bytes.iter().enumerate().skip(1) {
-            result += (byte as u64) << (i * 8);
+            result += u64::from(byte) << (i * 8);
         }
         result
     }
@@ -65,6 +75,7 @@ impl CryptoRng for RandomValuesRng {}
 
 /// Iterator returned by `PublicKeyIter`.
 #[wasm_bindgen]
+#[derive(Debug)]
 pub struct PublicKeyIterOutput {
     /// Value yielded by the iterator.
     #[wasm_bindgen(readonly)]
@@ -79,6 +90,14 @@ pub struct PublicKeyIterOutput {
 #[wasm_bindgen]
 pub struct PublicKeyIter {
     inner: Box<dyn Iterator<Item = PublicKey>>,
+}
+
+impl fmt::Debug for PublicKeyIter {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        formatter
+            .debug_struct("PublicKeyIter")
+            .finish_non_exhaustive()
+    }
 }
 
 #[allow(clippy::should_implement_trait)]
@@ -98,7 +117,7 @@ impl PublicKeyIter {
 
 /// Ed25519 public key wrapper.
 #[wasm_bindgen]
-#[derive(Clone, Copy)]
+#[derive(Debug, Clone, Copy)]
 pub struct PublicKey(ed::PublicKey);
 
 #[wasm_bindgen]
@@ -179,6 +198,7 @@ impl PublicKey {
 
 /// Result of verifying an Ed25519 signature.
 #[wasm_bindgen]
+#[derive(Debug)]
 pub struct Verification {
     result: bool,
     decompression_error: bool,
@@ -214,6 +234,7 @@ impl Verification {
 
 /// Ed25519 keypair.
 #[wasm_bindgen]
+#[derive(Debug)]
 pub struct Keypair(ed::Keypair);
 
 impl Default for Keypair {
@@ -296,7 +317,7 @@ impl Keypair {
 
 /// Ed25519 signature with additional debug information.
 #[wasm_bindgen]
-#[derive(Clone)]
+#[derive(Debug, Clone)]
 pub struct Signature {
     inner: ed::Signature,
     random_scalar: Scalar,
@@ -481,6 +502,7 @@ impl Signature {
 
 /// Scalar value used in Ed25519.
 #[wasm_bindgen]
+#[derive(Debug)]
 pub struct RandomScalar(Scalar);
 
 impl Default for RandomScalar {
@@ -502,6 +524,7 @@ impl RandomScalar {
 
 /// Modified scalar in an Ed25519 signature.
 #[wasm_bindgen]
+#[derive(Debug)]
 pub struct ModifiedScalar {
     valid: bool,
     bytes: Box<[u8]>,
