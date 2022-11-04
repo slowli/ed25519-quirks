@@ -30,7 +30,7 @@
     "@vue/compiler-sfc": "^3.2.37",
     "@vue/test-utils": "^2.2.1",
     "autoprefixer": "^10.4.0",
-    "babel-loader": "^9.0.1",
+    "babel-loader": "^9.1.0",
     "chai": "^4.3.4",
     "chai-bytes": "^0.1.2",
     "copy-webpack-plugin": "^11.0.0",
