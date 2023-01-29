@@ -5,7 +5,7 @@
 set -ex
 
 if [[ "$RUST_VERSION" == "" ]]; then
-  echo "RUST_VERSION env var is not defined; set it to the Rust toolchain to use (e.g., 1.63.0)"
+  echo "RUST_VERSION env var is not defined; set it to the Rust toolchain to use (e.g., 1.65.0)"
   exit 1
 fi
 

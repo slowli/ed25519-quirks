@@ -147,9 +147,8 @@ impl PublicKey {
 
     /// Verifies a signed message under this public key.
     pub fn verify(&self, message: &[u8], signature: &[u8]) -> bool {
-        let ed_signature = match ed::Signature::from_bytes(signature) {
-            Ok(signature) => signature,
-            Err(_) => return false,
+        let Ok(ed_signature) = ed::Signature::from_bytes(signature) else {
+            return false;
         };
         self.0.verify(message, &ed_signature).is_ok()
     }
