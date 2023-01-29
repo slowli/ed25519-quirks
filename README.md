@@ -18,7 +18,7 @@ and Vue.
 
 You will need to install a Node / npm toolchain (preferably via a manager like [`nvm`])
 and a Rust toolchain (preferably via [`rustup`]). Both toolchains should be recent; i.e., Node 16-LTS
-and Rust 1.63+. You should also install [`wasm-pack`].
+and Rust 1.65+. You should also install [`wasm-pack`].
 
 To (re)build the WASM file and its JS bindings, execute
 

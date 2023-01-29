@@ -45,7 +45,7 @@ fn small_subgroup_key() {
 fn malleable_signature() {
     let keypair = Keypair::new();
     let (message, low_signature, high_signature) = (0..)
-        .map(|i| format!("message #{}", i))
+        .map(|i| format!("message #{i}"))
         .filter_map(|message| {
             let signature = keypair.sign(message.as_bytes());
             let high_scalar = signature.modified_scalar();
