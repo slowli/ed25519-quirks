@@ -35,12 +35,17 @@ block main
   h3 Mutating Signature Scalar
 
   p.
-    Some Ed25519 implementations verify that signature scalar <code>s &lt; 2<sup>253</sup></code>,
-    rather than comparing it to the subgroup order <code>ℓ</code>. The problem is,
-    for most valid scalars <code>s</code>,
+    Some Ed25519 implementations (generally, older ones) verify that signature scalar
+    <code>s &lt; 2<sup>253</sup></code>, rather than comparing it to the subgroup order <code>ℓ</code>.
+    The problem is, for most valid scalars <code>s</code>,
     <code>s + ℓ &lt; 2<sup>253</sup></code> as well; thus, <code>(R, s + ℓ)</code> is considered a valid signature.
     Since <code>2ℓ > 2<sup>253</sup></code>, using <code>s + 2ℓ</code>, <code>s + 3ℓ</code>, etc.
     as a scalar component of the signature will always fail.
+  p.
+    Newer Ed25519 implementations generally conform
+    to <a target="_blank" href="https://www.rfc-editor.org/rfc/rfc8032">IETF RFC 8032</a>, which requires
+    the strict <code>s &lt; ℓ</code> comparison as a part of verification. Thus, the described malleability vector
+    is not applicable.
 
   #app
     +loading
