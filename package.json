@@ -28,7 +28,7 @@
     "@babel/plugin-transform-runtime": "^7.19.1",
     "@babel/preset-env": "^7.20.2",
     "@vue/compiler-sfc": "^3.2.37",
-    "@vue/test-utils": "^2.2.1",
+    "@vue/test-utils": "^2.3.0",
     "autoprefixer": "^10.4.0",
     "babel-loader": "^9.1.0",
     "chai": "^4.3.4",
