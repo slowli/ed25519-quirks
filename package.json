@@ -68,7 +68,7 @@
     "webpack-dev-server": "^4.11.1"
   },
   "dependencies": {
-    "@babel/runtime": "^7.20.1",
+    "@babel/runtime": "^7.21.0",
     "bootstrap": "^5.2.3",
     "bootstrap-icons": "^1.10.2",
     "buffer": "^6.0.3",
