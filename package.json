@@ -59,7 +59,7 @@
     "pug-loader": "^2.4.0",
     "rimraf": "^5.0.0",
     "sass": "^1.62.1",
-    "sass-loader": "^13.2.0",
+    "sass-loader": "^13.3.1",
     "toml": "^3.0.0",
     "vue-loader": "^17.1.0",
     "vue-style-loader": "^4.1.3",
