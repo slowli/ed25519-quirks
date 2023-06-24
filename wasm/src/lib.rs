@@ -133,7 +133,7 @@ impl PublicKey {
     #[wasm_bindgen(js_name = smallSubgroup)]
     pub fn small_subgroup() -> PublicKeyIter {
         let keys = EIGHT_TORSION.iter().map(|point| {
-            PublicKey(ed::PublicKey::from_bytes(point.compress().as_bytes()).unwrap())
+            PublicKey(ed::PublicKey::from_bytes(point.compress().as_bytes()).unwrap_throw())
         });
         PublicKeyIter {
             inner: Box::new(keys),
@@ -249,7 +249,7 @@ impl Keypair {
     pub fn new() -> Self {
         let mut secret = [0_u8; 32];
         RandomValuesRng.fill_bytes(&mut secret);
-        let secret = ed::SecretKey::from_bytes(&secret).unwrap();
+        let secret = ed::SecretKey::from_bytes(&secret).unwrap_throw();
         let public = ed::PublicKey::from(&secret);
         Keypair(ed::Keypair { secret, public })
     }
@@ -372,7 +372,7 @@ impl Signature {
         let mut inner = [0; 64];
         inner[..32].copy_from_slice(random_point.as_bytes());
         inner[32..].copy_from_slice(&signature_scalar.to_bytes());
-        let inner = ed::Signature::from_bytes(&inner).unwrap();
+        let inner = ed::Signature::from_bytes(&inner).unwrap_throw();
 
         Signature {
             inner,
@@ -399,7 +399,7 @@ impl Signature {
         bytes[32..].copy_from_slice(scalar.as_bytes());
 
         Signature {
-            inner: ed::Signature::from_bytes(&bytes).unwrap(),
+            inner: ed::Signature::from_bytes(&bytes).unwrap_throw(),
             random_scalar: scalar,
             hash: None,
         }
