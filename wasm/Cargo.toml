@@ -23,16 +23,15 @@ num-bigint = "0.4"
 rand_core = { version = "0.6", default-features = false }
 
 [dependencies.curve25519-dalek]
-version = "3.2.1"
+version = "4.0.0"
 default-features = false
-features = ["u64_backend"]
 
 [dependencies.ed25519-dalek]
-version = "1.0.1"
+version = "2.0.0"
 default-features = false
 # Kudos to the crate authors for checking signature scalar malleability by default;
 # however, we need malleability for our use case.
-features = ["u64_backend", "legacy_compatibility"]
+features = ["digest", "hazmat", "legacy_compatibility"]
 
 [dev-dependencies]
 wasm-bindgen-test = "0.3.33"
