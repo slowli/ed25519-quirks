@@ -25,10 +25,9 @@ jobs:
         with:
           node-version: 18.x
       - name: Install Rust
-        uses: actions-rs/toolchain@v1
+        uses: dtolnay/rust-toolchain@master
         with:
           toolchain: stable
-          override: true
           components: rustfmt, clippy
       - name: Install wasm-pack
         uses: jetli/wasm-pack-action@v0.4.0
@@ -43,10 +42,7 @@ jobs:
       - name: Format
         run: npm run lint:wasm:fmt
       - name: Clippy
-        uses: actions-rs/clippy-check@v1
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          args: --manifest-path wasm/Cargo.toml --all-targets -- -D warnings
+        run: cargo clippy --manifest-path wasm/Cargo.toml --all-targets -- -D warnings
       - run: npm run test:wasm -- --chrome --firefox
 
       # Front-end checks (`npm run build` should be the first one, it builds WASM)
