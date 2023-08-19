@@ -1,10 +1,11 @@
 /* eslint-env mocha */
 
-import { mount } from '@vue/test-utils';
 import { Buffer as $Buffer } from 'buffer';
 import chai from 'chai';
 import chaiBytes from 'chai-bytes';
 import dirtyChai from 'dirty-chai';
+import { mount } from '@vue/test-utils';
+
 import SeedRow from '../../src/components/SeedRow.vue';
 
 const { expect } = chai.use(chaiBytes).use(dirtyChai);
