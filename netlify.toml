@@ -7,7 +7,7 @@ NODE_VERSION = "18.12.1"
 # `--force` flag is required because of pug@3 conflicting with pug-loader peer dependency.
 # pug@3 works fine in practice.
 NPM_FLAGS = "--force"
-RUST_VERSION = "1.65.0"
+RUST_VERSION = "1.71.1"
 
 # Set up redirects from all aux domains to the canonical one.
 [[redirects]]

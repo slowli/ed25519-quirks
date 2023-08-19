@@ -5,13 +5,11 @@
 #![allow(
     clippy::must_use_candidate,
     clippy::missing_panics_doc,
-    clippy::missing_errors_doc,
-    clippy::drop_non_drop, // produced by `wasm_bindgen` macro
-    clippy::drop_copy // produced by `wasm_bindgen` macro
+    clippy::missing_errors_doc
 )]
 
 use curve25519_dalek::{
-    constants::{BASEPOINT_ORDER, ED25519_BASEPOINT_TABLE, EIGHT_TORSION},
+    constants::{BASEPOINT_ORDER, ED25519_BASEPOINT_POINT, EIGHT_TORSION},
     digest::Digest,
     edwards::{CompressedEdwardsY, EdwardsPoint},
     scalar::Scalar,
@@ -19,6 +17,7 @@ use curve25519_dalek::{
 use ed25519_dalek::{
     self as ed,
     ed25519::signature::{Signer, Verifier},
+    hazmat::ExpandedSecretKey,
     Sha512,
 };
 use num_bigint::BigUint;
@@ -118,13 +117,13 @@ impl PublicKeyIter {
 /// Ed25519 public key wrapper.
 #[wasm_bindgen]
 #[derive(Debug, Clone, Copy)]
-pub struct PublicKey(ed::PublicKey);
+pub struct PublicKey(ed::VerifyingKey);
 
 #[wasm_bindgen]
 impl PublicKey {
     /// Parses a public key from the supplied bytes.
     pub fn parse(bytes: &[u8]) -> Result<PublicKey, JsValue> {
-        ed::PublicKey::from_bytes(bytes)
+        ed::VerifyingKey::try_from(bytes)
             .map(PublicKey)
             .map_err(|e| JsValue::from_str(&e.to_string()))
     }
@@ -133,7 +132,7 @@ impl PublicKey {
     #[wasm_bindgen(js_name = smallSubgroup)]
     pub fn small_subgroup() -> PublicKeyIter {
         let keys = EIGHT_TORSION.iter().map(|point| {
-            PublicKey(ed::PublicKey::from_bytes(point.compress().as_bytes()).unwrap_throw())
+            PublicKey(ed::VerifyingKey::from_bytes(point.compress().as_bytes()).unwrap_throw())
         });
         PublicKeyIter {
             inner: Box::new(keys),
@@ -147,7 +146,7 @@ impl PublicKey {
 
     /// Verifies a signed message under this public key.
     pub fn verify(&self, message: &[u8], signature: &[u8]) -> bool {
-        let Ok(ed_signature) = ed::Signature::from_bytes(signature) else {
+        let Ok(ed_signature) = ed::Signature::try_from(signature) else {
             return false;
         };
         self.0.verify(message, &ed_signature).is_ok()
@@ -160,13 +159,11 @@ impl PublicKey {
     /// This method will return an error if the signature has an invalid format (e.g.,
     /// not 64 bytes long).
     pub fn verification(&self, message: &[u8], signature: &[u8]) -> Result<Verification, JsValue> {
-        let ed_signature = ed::Signature::from_bytes(signature)
+        let ed_signature = ed::Signature::try_from(signature)
             .map_err(|_| JsValue::from_str("invalid signature"))?;
 
-        let random_point = CompressedEdwardsY::from_slice(&signature[..32]);
-        let mut bits = [0; 32];
-        bits.copy_from_slice(&signature[32..]);
-        let signature_scalar = Scalar::from_bits(bits);
+        let random_point = CompressedEdwardsY(*ed_signature.r_bytes());
+        let signature_scalar = Scalar::from_bytes_mod_order(*ed_signature.s_bytes());
 
         let mut hasher = Sha512::new();
         hasher.update(random_point.as_bytes());
@@ -174,7 +171,7 @@ impl PublicKey {
         hasher.update(message);
         let hash_scalar = Scalar::from_hash(hasher);
 
-        let public_key_point = CompressedEdwardsY::from_slice(self.0.as_bytes()).decompress();
+        let public_key_point = CompressedEdwardsY(*self.0.as_bytes()).decompress();
         let computed_point = if let Some(ref public_key_point) = public_key_point {
             EdwardsPoint::vartime_double_scalar_mul_basepoint(
                 &hash_scalar,
@@ -183,7 +180,7 @@ impl PublicKey {
             )
             .compress()
         } else {
-            CompressedEdwardsY::from_slice(&[0; 32])
+            CompressedEdwardsY([0; 32])
         };
 
         Ok(Verification {
@@ -234,7 +231,7 @@ impl Verification {
 /// Ed25519 keypair.
 #[wasm_bindgen]
 #[derive(Debug)]
-pub struct Keypair(ed::Keypair);
+pub struct Keypair(ed::SigningKey);
 
 impl Default for Keypair {
     fn default() -> Self {
@@ -249,23 +246,21 @@ impl Keypair {
     pub fn new() -> Self {
         let mut secret = [0_u8; 32];
         RandomValuesRng.fill_bytes(&mut secret);
-        let secret = ed::SecretKey::from_bytes(&secret).unwrap_throw();
-        let public = ed::PublicKey::from(&secret);
-        Keypair(ed::Keypair { secret, public })
+        let signing_key = ed::SigningKey::from_bytes(&secret);
+        Keypair(signing_key)
     }
 
-    /// Constructs the keypair from a seed.
+    /// Constructs a keypair from a seed.
     #[wasm_bindgen(js_name = fromSeed)]
     pub fn from_seed(seed: &[u8]) -> Result<Keypair, JsValue> {
-        let secret = ed::SecretKey::from_bytes(seed)
-            .map_err(|_| JsValue::from_str("invalid seed length"))?;
-        let public = ed::PublicKey::from(&secret);
-        Ok(Keypair(ed::Keypair { secret, public }))
+        let signing_key =
+            ed::SigningKey::try_from(seed).map_err(|_| JsValue::from_str("invalid seed length"))?;
+        Ok(Keypair(signing_key))
     }
 
     /// Returns the 32-byte seed (aka Ed25519 secret key) corresponding to this keypair.
     pub fn seed(&self) -> Box<[u8]> {
-        Box::new(self.0.secret.to_bytes())
+        Box::new(self.0.to_bytes())
     }
 
     /// Returns the 64-byte expanded seed obtained by hashing the `seed()` with SHA-512.
@@ -281,26 +276,22 @@ impl Keypair {
     /// The scalar is derived as first 32 bytes of `SHA512(seed)` "clamped" as per Ed25519 spec:
     /// setting lowest 3 bits and the highest bit to 0, and the second-highest bit to 1.
     pub fn scalar(&self) -> Box<[u8]> {
-        let expanded_secret = ed::ExpandedSecretKey::from(&self.0.secret);
-        let mut bytes = [0; 32];
-        bytes.copy_from_slice(&expanded_secret.to_bytes()[..32]);
-        Box::new(bytes)
+        let expanded_secret = ExpandedSecretKey::from(&self.0.to_bytes());
+        Box::new(expanded_secret.scalar.to_bytes())
     }
 
     /// Returns the Ed25519 nonce used during signing.
     ///
     /// The nonce is equal to the upper 32 bytes of `SHA512(seed)`.
     pub fn nonce(&self) -> Box<[u8]> {
-        let expanded_secret = ed::ExpandedSecretKey::from(&self.0.secret);
-        let mut bytes = [0; 32];
-        bytes.copy_from_slice(&expanded_secret.to_bytes()[32..]);
-        Box::new(bytes)
+        let expanded_secret = ExpandedSecretKey::from(&self.0.to_bytes());
+        Box::new(expanded_secret.hash_prefix)
     }
 
     /// Returns the public key part of this keypair.
     #[wasm_bindgen(js_name = publicKey)]
     pub fn public_key(&self) -> PublicKey {
-        PublicKey(self.0.public)
+        PublicKey(self.0.verifying_key())
     }
 
     /// Signs the supplied message.
@@ -324,21 +315,21 @@ pub struct Signature {
 }
 
 impl Signature {
-    fn new(keypair: &ed::Keypair, message: &[u8]) -> Self {
-        let signature = keypair.sign(message);
+    fn new(signing_key: &ed::SigningKey, message: &[u8]) -> Self {
+        let signature = signing_key.sign(message);
 
-        let expanded_secret = ed::ExpandedSecretKey::from(&keypair.secret).to_bytes();
-        let nonce = &expanded_secret[32..];
+        let expanded_secret = ExpandedSecretKey::from(&signing_key.to_bytes());
+        let nonce = expanded_secret.hash_prefix;
         let mut hasher = Sha512::new();
         hasher.update(nonce);
         hasher.update(message);
         let random_scalar = Scalar::from_hash(hasher);
-        let random_point = (&random_scalar * &ED25519_BASEPOINT_TABLE).compress();
+        let random_point = (random_scalar * ED25519_BASEPOINT_POINT).compress();
         assert_eq!(random_point.as_bytes(), &signature.to_bytes()[..32]);
 
         let mut hasher = Sha512::new();
         hasher.update(random_point.as_bytes());
-        hasher.update(keypair.public.as_bytes());
+        hasher.update(signing_key.as_ref().as_bytes());
         hasher.update(message);
         let mut hash = [0; 64];
         hash.copy_from_slice(&hasher.finalize()[..]);
@@ -350,29 +341,29 @@ impl Signature {
         }
     }
 
-    fn with_random_scalar(keypair: &ed::Keypair, message: &[u8], random_scalar: &Scalar) -> Self {
-        let random_point = (random_scalar * &ED25519_BASEPOINT_TABLE).compress();
+    fn with_random_scalar(
+        signing_key: &ed::SigningKey,
+        message: &[u8],
+        random_scalar: &Scalar,
+    ) -> Self {
+        let random_point = (random_scalar * ED25519_BASEPOINT_POINT).compress();
 
         let mut hasher = Sha512::new();
         hasher.update(random_point.as_bytes());
-        hasher.update(keypair.public.as_bytes());
+        hasher.update(signing_key.as_ref().as_bytes());
         hasher.update(message);
         let mut hash = [0; 64];
         hash.copy_from_slice(&hasher.finalize()[..]);
 
-        let expanded_secret = ed::ExpandedSecretKey::from(&keypair.secret).to_bytes();
-        let secret_scalar = Scalar::from_bits({
-            let mut bytes = [0; 32];
-            bytes.copy_from_slice(&expanded_secret[..32]);
-            bytes
-        });
+        let expanded_secret = ExpandedSecretKey::from(&signing_key.to_bytes());
+        let secret_scalar = &expanded_secret.scalar;
         let signature_scalar =
             random_scalar + Scalar::from_bytes_mod_order_wide(&hash) * secret_scalar;
 
         let mut inner = [0; 64];
         inner[..32].copy_from_slice(random_point.as_bytes());
         inner[32..].copy_from_slice(&signature_scalar.to_bytes());
-        let inner = ed::Signature::from_bytes(&inner).unwrap_throw();
+        let inner = ed::Signature::from_bytes(&inner);
 
         Signature {
             inner,
@@ -393,13 +384,13 @@ impl Signature {
         RandomValuesRng.fill_bytes(&mut scalar_bytes);
         let scalar = Scalar::from_bytes_mod_order_wide(&scalar_bytes);
 
-        let point = (&scalar * &ED25519_BASEPOINT_TABLE).compress();
+        let point = (scalar * ED25519_BASEPOINT_POINT).compress();
         let mut bytes = [0; 64];
         bytes[..32].copy_from_slice(point.as_bytes());
         bytes[32..].copy_from_slice(scalar.as_bytes());
 
         Signature {
-            inner: ed::Signature::from_bytes(&bytes).unwrap_throw(),
+            inner: ed::Signature::from_bytes(&bytes),
             random_scalar: scalar,
             hash: None,
         }
