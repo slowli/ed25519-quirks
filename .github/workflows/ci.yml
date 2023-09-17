@@ -33,6 +33,11 @@ jobs:
         uses: jetli/wasm-pack-action@v0.4.0
         with:
           version: 'latest'
+      - name: Install cargo-deny
+        uses: baptiste0928/cargo-install@v2
+        with:
+          crate: cargo-deny
+          version: "^0.14"
 
       # `--force` flag is required because of pug@3 conflicting with pug-loader peer dependency.
       # pug@3 works fine in practice.
@@ -43,7 +48,10 @@ jobs:
         run: npm run lint:wasm:fmt
       - name: Clippy
         run: cargo clippy --manifest-path wasm/Cargo.toml --all-targets -- -D warnings
-      - run: npm run test:wasm -- --chrome --firefox
+      - name: Check dependencies
+        run: (cd wasm; cargo deny check)
+      - name: Tests
+        run: npm run test:wasm -- --chrome --firefox
 
       # Front-end checks (`npm run build` should be the first one, it builds WASM)
       - run: npm run build
