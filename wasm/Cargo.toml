@@ -27,7 +27,7 @@ version = "4.1.0"
 default-features = false
 
 [dependencies.ed25519-dalek]
-version = "2.0.0"
+version = "2.1.0"
 default-features = false
 # Kudos to the crate authors for checking signature scalar malleability by default;
 # however, we need malleability for our use case.
