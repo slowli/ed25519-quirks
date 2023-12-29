@@ -73,6 +73,6 @@
     "bootstrap-icons": "^1.11.0",
     "buffer": "^6.0.3",
     "copy-text-to-clipboard": "^3.2.0",
-    "vue": "^3.3.2"
+    "vue": "^3.4.0"
   }
 }
