@@ -39,7 +39,7 @@
     "eslint": "^8.56.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-plugin-import": "^2.29.0",
-    "eslint-plugin-vue": "^9.19.2",
+    "eslint-plugin-vue": "^9.20.0",
     "fantasticon": "^2.0.0",
     "html-webpack-plugin": "^5.6.0",
     "karma": "^6.4.0",
@@ -73,6 +73,6 @@
     "bootstrap-icons": "^1.11.0",
     "buffer": "^6.0.3",
     "copy-text-to-clipboard": "^3.2.0",
-    "vue": "^3.3.2"
+    "vue": "^3.4.8"
   }
 }
