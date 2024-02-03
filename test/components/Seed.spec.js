@@ -1,14 +1,13 @@
 /* eslint-env mocha */
 
 import { Buffer as $Buffer } from 'buffer';
-import chai from 'chai';
+import * as chai from 'chai';
 import chaiBytes from 'chai-bytes';
-import dirtyChai from 'dirty-chai';
 import { mount } from '@vue/test-utils';
 
 import SeedRow from '../../src/components/SeedRow.vue';
 
-const { expect } = chai.use(chaiBytes).use(dirtyChai);
+const { expect } = chai.use(chaiBytes);
 // Cryptographic dependency that we need to load asynchronously.
 let $crypto = {};
 
@@ -41,13 +40,13 @@ describe('SeedRow.vue', () => {
 
   it('should display error if seed is invalid', async () => {
     const seed = createSeed();
-    expect(seed.find('.invalid-feedback').exists()).to.be.false();
+    expect(seed.find('.invalid-feedback').exists()).to.be.false;
 
     const input = seed.find('input[type=text]');
     input.element.value = 'invalid';
     await input.trigger('input');
     await seed.vm.$nextTick();
-    expect(seed.find('.invalid-feedback').exists()).to.be.true();
+    expect(seed.find('.invalid-feedback').exists()).to.be.true;
   });
 
   it('should update encoding of displayed valid seed', async () => {

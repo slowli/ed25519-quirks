@@ -1,11 +1,10 @@
 /* eslint-env mocha */
 
 import { Buffer } from 'buffer';
-import chai from 'chai';
+import * as chai from 'chai';
 import chaiBytes from 'chai-bytes';
-import dirtyChai from 'dirty-chai';
 
-const { expect } = chai.use(chaiBytes).use(dirtyChai);
+const { expect } = chai.use(chaiBytes);
 let Keypair;
 let PublicKey;
 let Signature;
@@ -80,7 +79,7 @@ describe('crypto', () => {
 
         messages.forEach((message) => {
           const bytes = Buffer.from(message, 'utf8');
-          expect(key.verify(bytes, signature.bytes())).to.be.true();
+          expect(key.verify(bytes, signature.bytes())).to.be.true;
         });
       });
     });
@@ -101,9 +100,9 @@ describe('crypto', () => {
       const message = Uint8Array.from([1, 2, 3]);
       const signature = keypair.sign(message);
       expect(signature.bytes()).to.have.lengthOf(64);
-      expect(keypair.publicKey().verify(message, signature.bytes())).to.be.true();
+      expect(keypair.publicKey().verify(message, signature.bytes())).to.be.true;
       message[1] = 1;
-      expect(keypair.publicKey().verify(message, signature.bytes())).to.be.false();
+      expect(keypair.publicKey().verify(message, signature.bytes())).to.be.false;
     });
 
     it('should create a new keypair each time', () => {
