@@ -1,4 +1,5 @@
 /* eslint-env mocha */
+/* eslint-disable no-unused-expressions */
 
 import { Buffer } from 'buffer';
 import * as chai from 'chai';
