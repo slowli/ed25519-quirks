@@ -17,8 +17,8 @@ and Vue.
 ## Running locally
 
 You will need to install a Node / npm toolchain (preferably via a manager like [`nvm`])
-and a Rust toolchain (preferably via [`rustup`]). Both toolchains should be recent; i.e., Node 18-LTS
-and Rust 1.71+. You should also install [`wasm-pack`].
+and a Rust toolchain (preferably via [`rustup`]). Both toolchains should be recent; i.e., Node 20-LTS
+and Rust 1.75+. You should also install [`wasm-pack`].
 
 To (re)build the WASM file and its JS bindings, execute
 
@@ -36,7 +36,7 @@ npm start
 
 ## Testing
 
-To run tests, use `npm test` (for front-end tests) and `npm run test-wasm` (for WASM tests).
+To run tests, use `npm run test:js` (for front-end tests) and `npm run test:wasm` (for WASM tests).
 Be aware that the `test-wasm` command requires specifying browsers used for testing as flags
 (e.g., `-- --firefox`).
 
