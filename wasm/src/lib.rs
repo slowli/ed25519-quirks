@@ -9,7 +9,7 @@
 )]
 
 use curve25519_dalek::{
-    constants::{BASEPOINT_ORDER, ED25519_BASEPOINT_POINT, EIGHT_TORSION},
+    constants::{ED25519_BASEPOINT_POINT, EIGHT_TORSION},
     digest::Digest,
     edwards::{CompressedEdwardsY, EdwardsPoint},
     scalar::Scalar,
@@ -469,8 +469,16 @@ impl Signature {
     /// Returns the scalar shifted by the subgroup order `l`, `s' = s + l`.
     #[wasm_bindgen(js_name = "modifiedScalar")]
     pub fn modified_scalar(&self) -> ModifiedScalar {
+        // Little-endian representation of the Ed25519 basepoint. Taken from `BASEPOINT_ORDER_PRIVATE`
+        // constant in `curve25519-dalek`.
+        const BASEPOINT_ORDER_BYTES: &[u8; 32] = &[
+            0xed, 0xd3, 0xf5, 0x5c, 0x1a, 0x63, 0x12, 0x58, 0xd6, 0x9c, 0xf7, 0xa2, 0xde, 0xf9,
+            0xde, 0x14, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x10,
+        ];
+
         let s = BigUint::from_bytes_le(&self.scalar());
-        let basepoint_order = BigUint::from_bytes_le(BASEPOINT_ORDER.as_bytes());
+        let basepoint_order = BigUint::from_bytes_le(BASEPOINT_ORDER_BYTES);
         let shifted_s = (s + &basepoint_order).to_bytes_le();
         assert_eq!(shifted_s.len(), 32);
         ModifiedScalar::new(shifted_s.into_boxed_slice(), &self.random_point())
