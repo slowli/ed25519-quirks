@@ -165,7 +165,7 @@ module.exports = {
     // This hard-codes the relative path to the `TextDecoder` module from the `wasm/pkg` directory,
     // which is the only place using the `TextDecoder` global.
     new webpack.ProvidePlugin({
-      TextDecoder: ['../../src/TextDecoder', 'default'],
+      TextDecoder: ['../../src/TextDecoder.js', 'default'],
     }),
 
     ...htmlPlugins,
