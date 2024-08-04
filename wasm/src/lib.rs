@@ -267,7 +267,7 @@ impl Keypair {
     #[wasm_bindgen(js_name = expandedSeed)]
     pub fn expanded_seed(&self) -> Box<[u8]> {
         let mut bytes = [0; 64];
-        bytes.copy_from_slice(&Sha512::digest(&self.seed()));
+        bytes.copy_from_slice(&Sha512::digest(self.seed()));
         Box::new(bytes)
     }
 
