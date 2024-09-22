@@ -23,7 +23,7 @@ and Rust 1.75+. You should also install [`wasm-pack`].
 To (re)build the WASM file and its JS bindings, execute
 
 ```shell
-npm run build-wasm
+npm run build:wasm
 ```
 
 To serve the app locally with the Webpack dev server, run
